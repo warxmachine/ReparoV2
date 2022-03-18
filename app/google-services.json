@@ -1,0 +1,204 @@
+{
+  "project_info": {
+    "project_number": "655160910619",
+    "firebase_url": "https://cyberfix-5e795.firebaseio.com",
+    "project_id": "cyberfix-5e795",
+    "storage_bucket": "cyberfix-5e795.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:655160910619:android:44b8d8a83ec0a602d7a9be",
+        "android_client_info": {
+          "package_name": "in.cybersin.reparo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "655160910619-a67l9ega12pe87kkthc52pdrp03f038f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDMXo3DTtm35VVnQJrwrZwjs6NGe8RJoLA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "655160910619-a67l9ega12pe87kkthc52pdrp03f038f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:655160910619:android:44609b2ab96d52a2",
+        "android_client_info": {
+          "package_name": "tech.cyberfix.cybersin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "655160910619-9u14c0cqccci04cq9pv8bpq9807cop87.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "tech.cyberfix.cybersin",
+            "certificate_hash": "b9b8c8d9728643c5e8c83f26160745c03b12cf76"
+          }
+        },
+        {
+          "client_id": "655160910619-a67l9ega12pe87kkthc52pdrp03f038f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDMXo3DTtm35VVnQJrwrZwjs6NGe8RJoLA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "655160910619-a67l9ega12pe87kkthc52pdrp03f038f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:655160910619:android:43481bf2e21d4247",
+        "android_client_info": {
+          "package_name": "tech.cybersin.cyberfix"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "655160910619-89bq0j6qpeffhla69ja1feu1f9b4vnmj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "tech.cybersin.cyberfix",
+            "certificate_hash": "f9f2c3454daa5ea7be33831438b9148050a21474"
+          }
+        },
+        {
+          "client_id": "655160910619-mvm816b0cnkphmlb19vr84td0fgvrcfk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "tech.cybersin.cyberfix",
+            "certificate_hash": "b9b8c8d9728643c5e8c83f26160745c03b12cf76"
+          }
+        },
+        {
+          "client_id": "655160910619-a67l9ega12pe87kkthc52pdrp03f038f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDMXo3DTtm35VVnQJrwrZwjs6NGe8RJoLA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "655160910619-a67l9ega12pe87kkthc52pdrp03f038f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:655160910619:android:bf0860acc4a73aff",
+        "android_client_info": {
+          "package_name": "tech.cybersin.cyberfixcustomer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "655160910619-807mjkemluii47l2tpvfdpqboh242npi.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "tech.cybersin.cyberfixcustomer",
+            "certificate_hash": "b9b8c8d9728643c5e8c83f26160745c03b12cf76"
+          }
+        },
+        {
+          "client_id": "655160910619-aqtsifjr49vrnm012sm50vduijvvt237.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "tech.cybersin.cyberfixcustomer",
+            "certificate_hash": "cadceccd6a82126c5d29b386d7c0d6a92fa28bdc"
+          }
+        },
+        {
+          "client_id": "655160910619-a67l9ega12pe87kkthc52pdrp03f038f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDMXo3DTtm35VVnQJrwrZwjs6NGe8RJoLA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "655160910619-a67l9ega12pe87kkthc52pdrp03f038f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:655160910619:android:17bbb70db7f84ff2d7a9be",
+        "android_client_info": {
+          "package_name": "tech.cybersin.cybersinadmin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "655160910619-kmbfv3jr6u1occvohosf6mtg1tv1ue5n.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "tech.cybersin.cybersinadmin",
+            "certificate_hash": "b9b8c8d9728643c5e8c83f26160745c03b12cf76"
+          }
+        },
+        {
+          "client_id": "655160910619-a67l9ega12pe87kkthc52pdrp03f038f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDMXo3DTtm35VVnQJrwrZwjs6NGe8RJoLA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "655160910619-a67l9ega12pe87kkthc52pdrp03f038f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

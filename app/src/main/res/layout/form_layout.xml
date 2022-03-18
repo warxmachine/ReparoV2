@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="@drawable/card_background"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="Fill the form"
+        android:layout_marginBottom="20dp"
+        android:textColor="#193661"
+        android:textSize="25dp">
+
+    </TextView>
+    <EditText
+        android:id="@+id/device"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/edittext"
+        android:backgroundTint="@color/white"
+        android:drawablePadding="10dp"
+        android:fontFamily="@font/mainfont"
+        android:hint="Device Name"
+        android:inputType="textPersonName"
+        android:layout_marginBottom="10dp"
+        android:padding="10dp"
+        android:textColorHint="#587AAC"
+        android:textSize="14sp" />
+    <EditText
+        android:id="@+id/company"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/edittext"
+        android:backgroundTint="@color/white"
+        android:drawablePadding="10dp"
+        android:fontFamily="@font/mainfont"
+        android:hint="Company"
+        android:inputType="textPersonName"
+        android:layout_marginBottom="10dp"
+        android:padding="10dp"
+        android:textColorHint="#587AAC"
+        android:textSize="14sp" />
+    <EditText
+        android:id="@+id/problem"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/edittext"
+        android:backgroundTint="@color/white"
+        android:drawablePadding="10dp"
+        android:fontFamily="@font/mainfont"
+        android:hint="Tell us your problem"
+        android:inputType="textPersonName"
+        android:layout_marginBottom="10dp"
+        android:padding="10dp"
+        android:textColorHint="#587AAC"
+        android:textSize="14sp" />
+    <Button
+        android:layout_width="186dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/buttonback"
+        android:text="Submit"
+        android:textAllCaps="false"
+        app:backgroundTint="@null">
+
+    </Button>
+
+</LinearLayout>

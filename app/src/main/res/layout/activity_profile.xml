@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_gravity="center"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:layout_height="match_parent"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/background2"
+        android:orientation="vertical">
+        <Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_gravity="center"
+            android:background="@drawable/edittext"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="?attr/actionBarTheme">
+
+            <TextView
+                android:layout_width="318dp"
+                android:layout_height="wrap_content"
+                android:text="Profile"
+                android:textColor="#193661"
+                android:textSize="20dp">
+
+            </TextView>
+
+        </Toolbar>
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/imageProfile"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_gravity="center"
+            app:civ_border_width="2dp"
+            android:src="@drawable/person_image"
+            android:layout_margin="10dp"
+      >
+
+        </de.hdodenhof.circleimageview.CircleImageView>
+
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:text=""
+            android:textColor="#193661"
+            android:textSize="18dp">
+
+        </TextView>
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="vertical">
+
+
+                <TextView
+                    android:id="@+id/email"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/ic_mail_outline_black_24dp"
+                    android:drawablePadding="10dp"
+                    android:padding="10dp"
+                    android:text=""
+                    android:textColor="@color/black">
+
+                </TextView>
+
+                <TextView
+                    android:id="@+id/phone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/ic_outline_local_phone_24"
+                    android:drawablePadding="10dp"
+                    android:padding="10dp"
+                    android:text=""
+                    android:textColor="@color/black">
+
+                </TextView>
+            </LinearLayout>
+
+
+            <Button
+                android:id="@+id/button2"
+                android:layout_width="144dp"
+                android:layout_height="38dp"
+                android:layout_gravity="bottom|center"
+                android:layout_margin="20dp"
+                android:background="@drawable/buttonback"
+                android:gravity="center"
+                android:text="Sign out"
+                android:textAllCaps="false"
+                android:textSize="10dp"
+                app:backgroundTint="@null" />
+        </LinearLayout>
+
+    </LinearLayout>
+</LinearLayout>
