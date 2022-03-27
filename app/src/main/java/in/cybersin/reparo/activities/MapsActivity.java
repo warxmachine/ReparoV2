@@ -228,7 +228,6 @@ public class MapsActivity extends AppCompatActivity
                         mapRipple.stopRippleMapAnimation();
                     }
                     next.animate()
-
                             .alpha(0.0f)
                             .setDuration(300).setListener(new AnimatorListenerAdapter() {
                         @Override

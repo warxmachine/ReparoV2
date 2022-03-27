@@ -212,6 +212,11 @@ public class LoginRegistration extends AppCompatActivity {
                         .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                             @Override
                             public void onSuccess(AuthResult authResult) {
+                                View parentLayout = findViewById(R.id.content);
+
+                                Snackbar.make(parentLayout, "Registered SuccessFully, Now you are good to go.", Snackbar.LENGTH_SHORT)
+                                        .show();
+
                                 Paper.book().write(Common.userField, Email.getText().toString());
                                 Paper.book().write(Common.passfield, Password.getText().toString());
                                 Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
