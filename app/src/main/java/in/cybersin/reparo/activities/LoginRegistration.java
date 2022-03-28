@@ -216,7 +216,6 @@ public class LoginRegistration extends AppCompatActivity {
 
                                 Snackbar.make(parentLayout, "Registered SuccessFully, Now you are good to go.", Snackbar.LENGTH_SHORT)
                                         .show();
-
                                 Paper.book().write(Common.userField, Email.getText().toString());
                                 Paper.book().write(Common.passfield, Password.getText().toString());
                                 Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
@@ -262,7 +261,6 @@ public class LoginRegistration extends AppCompatActivity {
                                         dialog0.dismiss();
                                         finish();
                                     }
-
                                     @Override
                                     public void onCancelled(DatabaseError databaseError) {
 
