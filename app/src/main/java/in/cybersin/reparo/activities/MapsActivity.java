@@ -30,6 +30,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -94,6 +95,7 @@ public class MapsActivity extends AppCompatActivity
     boolean iselec = true;
     CircleImageView profile;
     ImageView next;
+    Button submit;
     Marker mCurrLocationMarker;
     FusedLocationProviderClient mFusedLocationClient;
     CircleImageView computer, electrician, mobile;
@@ -148,6 +150,7 @@ public class MapsActivity extends AppCompatActivity
         container = findViewById(R.id.containet);
         container.setVisibility(View.GONE);
         mobile = findViewById(R.id.smartphone);
+        submit =findViewById(R.id.submit);
         LinearLayout linearLayout = findViewById(R.id.click);
         linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -316,6 +319,7 @@ public class MapsActivity extends AppCompatActivity
         }
         mGoogleMap = googleMap;
         mGoogleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+
         mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(60000); // two minute interval
         mLocationRequest.setFastestInterval(120000);
@@ -395,13 +399,13 @@ public class MapsActivity extends AppCompatActivity
                                 company.setVisibility(View.GONE);
                                 break;
                             case "computer":
-                                device.setVisibility(View.VISIBLE);
+                                device.setVisibility(View.GONE);
                                 device.setFocusable(true);
                                 device.setFocusableInTouchMode(true);
                                 device.requestFocus();
                                 InputMethodManager imm2 = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                                 imm2.showSoftInput(device, InputMethodManager.SHOW_IMPLICIT);
-                                company.setVisibility(View.VISIBLE);
+                                company.setVisibility(View.GONE);
                                 break;
 
                         }
@@ -430,6 +434,7 @@ public class MapsActivity extends AppCompatActivity
                         .build();// Creates a CameraPosition from the builder
 
                 mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
                 mGoogleMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
                     @Override
                     public void onCameraMove() {

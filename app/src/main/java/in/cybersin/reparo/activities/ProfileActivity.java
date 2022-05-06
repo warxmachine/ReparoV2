@@ -75,7 +75,11 @@ public class ProfileActivity extends AppCompatActivity {
                         Name.setText(customer.getName());
                         Email.setText(customer.getEmail());
                         Phone.setText(customer.getPhone());
-                        Picasso.get().load(customer.getAvatarName()).into(ImageView);
+                        if(!(customer.getAvatarName() == null)){
+                            Picasso.get().load(customer.getAvatarName()).into(ImageView);
+                        }else{
+                            Picasso.get().load(R.drawable.person_image);
+                        }
                     }
 
                     @Override
