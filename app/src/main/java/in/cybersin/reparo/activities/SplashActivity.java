@@ -17,7 +17,6 @@ import in.cybersin.reparo.R;
 public class SplashActivity extends AppCompatActivity {
     TextView textView;
 
-
     private final int SPLASH_DISPLAY_LENGTH = 7000;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,17 +24,14 @@ public class SplashActivity extends AppCompatActivity {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         if (Build.VERSION.SDK_INT >= 21) {
             getWindow().getDecorView()
-                    .setSystemUiVisibility(
-                            View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+                    .setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         }
         setContentView(R.layout.activity_splash);
         textView = findViewById(R.id.tool);
         Animation animation= AnimationUtils.loadAnimation(getApplicationContext(),R.anim.zoom);
         textView.startAnimation(animation);
-
         changeStatusBarColor();
-
-        final Intent i = new Intent(this, LoginRegistration.class);
+        final Intent i = new Intent(this, MapsActivity.class);
         Thread timer = new Thread() {
             public void run() {
                 try {

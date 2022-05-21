@@ -1,8 +1,5 @@
 package in.cybersin.reparo.activities;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
@@ -12,6 +9,9 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toolbar;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -29,7 +29,7 @@ public class ProfileActivity extends AppCompatActivity {
     Toolbar toolbar;
     TextView Name;
     TextView Email;
-    Button signout;
+    Button signout,Signin;
     TextView Phone;
     CircleImageView ImageView;
 
@@ -48,17 +48,24 @@ public class ProfileActivity extends AppCompatActivity {
             }
 
         });
-        Name=findViewById(R.id.name);
-        Email=findViewById(R.id.email);
-        Phone=findViewById(R.id.phone);
-        ImageView=findViewById(R.id.imageProfile);
+        Name = findViewById(R.id.name);
+        Email = findViewById(R.id.email);
+        Phone = findViewById(R.id.phone);
+        ImageView = findViewById(R.id.imageProfile);
         signout = findViewById(R.id.button2);
+        Signin = findViewById(R.id.button);
+        Signin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ProfileActivity.this,LoginRegistration.class));
+            }
+        });
         signout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FirebaseAuth.getInstance().signOut();
                 Paper.book().destroy();
-                startActivity(new Intent(ProfileActivity.this,LoginRegistration.class));
+                startActivity(new Intent(ProfileActivity.this, LoginRegistration.class));
             }
         });
 
@@ -66,26 +73,35 @@ public class ProfileActivity extends AppCompatActivity {
         getWindow().setStatusBarColor(Color.TRANSPARENT);
         @SuppressLint("UseCompatLoadingForDrawables") android.graphics.drawable.Drawable background = ProfileActivity.this.getResources().getDrawable(R.drawable.background2);
         getWindow().setBackgroundDrawable(background);
-
-        FirebaseDatabase.getInstance().getReference("CustomerInformation").child(FirebaseAuth.getInstance().getUid())
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        Customer customer = snapshot.getValue(Customer.class);
-                        Name.setText(customer.getName());
-                        Email.setText(customer.getEmail());
-                        Phone.setText(customer.getPhone());
-                        if(!(customer.getAvatarName() == null)){
-                            Picasso.get().load(customer.getAvatarName()).into(ImageView);
-                        }else{
-                            Picasso.get().load(R.drawable.person_image);
+        if (!(FirebaseAuth.getInstance().getCurrentUser() == null)) {
+            FirebaseDatabase.getInstance().getReference("CustomerInformation").child(FirebaseAuth.getInstance().getUid())
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            Customer customer = snapshot.getValue(Customer.class);
+                            Name.setText(customer.getName());
+                            Email.setText(customer.getEmail());
+                            Phone.setText(customer.getPhone());
+                            Signin.setVisibility(View.GONE);
+                            if (!(customer.getAvatarName() == null)) {
+                                Picasso.get().load(customer.getAvatarName()).into(ImageView);
+                            } else {
+                                Picasso.get().load(R.drawable.person_image);
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
 
-                    }
-                });
+                        }
+                    });
+        } else {
+            Name.setText("Hello, Guest");
+            Email.setVisibility(View.GONE);
+            Phone.setVisibility(View.GONE);
+            signout.setVisibility(View.GONE);
+            Picasso.get().load(R.drawable.person_image);
+        }
     }
+
 }

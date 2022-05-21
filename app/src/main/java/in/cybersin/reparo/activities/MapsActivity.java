@@ -1,15 +1,8 @@
 package in.cybersin.reparo.activities;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
 import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -18,34 +11,29 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.Switch;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
 import com.arsy.maps_library.MapRipple;
-import com.firebase.geofire.GeoFire;
-import com.firebase.geofire.GeoLocation;
-import com.firebase.geofire.GeoQuery;
-import com.firebase.geofire.GeoQueryEventListener;
-import com.gmail.samehadar.iosdialog.IOSDialog;
-import com.google.android.gms.common.internal.service.Common;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -72,6 +60,7 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
+import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import in.cybersin.reparo.R;
@@ -90,6 +79,7 @@ public class MapsActivity extends AppCompatActivity
     boolean ispc = true;
     boolean ismo = true;
     LinearLayout container;
+    DatabaseReference reference;
     EditText Proble, device, company;
     String type;
     boolean iselec = true;
@@ -98,7 +88,7 @@ public class MapsActivity extends AppCompatActivity
     Button submit;
     Marker mCurrLocationMarker;
     FusedLocationProviderClient mFusedLocationClient;
-    CircleImageView computer, electrician, mobile;
+    CircleImageView computer, airconditioner, mobile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,22 +104,27 @@ public class MapsActivity extends AppCompatActivity
         getWindow().setStatusBarColor(Color.TRANSPARENT);
         changeStatusBarColor();
         profile = findViewById(R.id.profile);
-        FirebaseDatabase.getInstance().getReference("CustomerInformation").child(FirebaseAuth.getInstance().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Customer customer = snapshot.getValue(Customer.class);
-                if (!(customer.getAvatarName() == null)) {
-                    Picasso.get().load(customer.getAvatarName()).into(profile);
-                } else {
-                    Picasso.get().load(R.drawable.person_image);
+        if (!(FirebaseAuth.getInstance().getCurrentUser() == null)) {
+            FirebaseDatabase.getInstance().getReference("CustomerInformation").child(FirebaseAuth.getInstance().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    Customer customer = snapshot.getValue(Customer.class);
+                    if (!(customer.getAvatarName() == null)) {
+                        Picasso.get().load(customer.getAvatarName()).into(profile);
+                    } else {
+                        Picasso.get().load(R.drawable.person_image);
+                    }
                 }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
 
-            }
-        });
+                }
+            });
+        } else {
+            Picasso.get().load(R.drawable.person_image);
+        }
+
 
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -139,7 +134,7 @@ public class MapsActivity extends AppCompatActivity
             }
         });
         type = "";
-        electrician = findViewById(R.id.electic);
+        airconditioner = findViewById(R.id.electic);
         next = findViewById(R.id.next);
         rl = findViewById(R.id.click);
         next.setVisibility(View.GONE);
@@ -150,7 +145,7 @@ public class MapsActivity extends AppCompatActivity
         container = findViewById(R.id.containet);
         container.setVisibility(View.GONE);
         mobile = findViewById(R.id.smartphone);
-        submit =findViewById(R.id.submit);
+        submit = findViewById(R.id.submit);
         LinearLayout linearLayout = findViewById(R.id.click);
         linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -164,7 +159,7 @@ public class MapsActivity extends AppCompatActivity
                 if (computer.getBorderColor() == Color.WHITE) {
                     type = "computer";
                     computer.setBorderColor(Color.GREEN);
-                    electrician.setBorderColor(Color.WHITE);
+                    airconditioner.setBorderColor(Color.WHITE);
                     rl.animate().translationX(-20).setDuration(400);
                     next.animate()
                             .alpha(1.0f)
@@ -203,14 +198,69 @@ public class MapsActivity extends AppCompatActivity
 
             }
         });
-
-        electrician.setOnClickListener(new View.OnClickListener() {
+        submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (electrician.getBorderColor() == Color.WHITE) {
-                    type = "electrician";
+                switch (type) {
+                    case "computer": {
+                        reference = FirebaseDatabase.getInstance().getReference("Requests").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid()));
+                        FirebaseDatabase.getInstance().getReference("Requests").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid()))
+                                .addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                    electrician.setBorderColor(Color.GREEN);
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
+
+                    }
+                    case "phone": {
+                        reference = FirebaseDatabase.getInstance().getReference("Requests").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid()));
+                        FirebaseDatabase.getInstance().getReference("Requests").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid()))
+                                .addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
+
+                    }
+                    case "airconditioner": {
+                        reference = FirebaseDatabase.getInstance().getReference("Requests").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid()));
+                        FirebaseDatabase.getInstance().getReference("Requests").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid()))
+                                .addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        reference.child("prooblem").setValue(Proble.getText().toString());
+
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
+
+                    }
+                }
+            }
+        });
+        airconditioner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (airconditioner.getBorderColor() == Color.WHITE) {
+                    type = "airconditioner";
+
+                    airconditioner.setBorderColor(Color.GREEN);
                     mobile.setBorderColor(Color.WHITE);
                     rl.animate().translationX(-20).setDuration(400);
                     next.animate()
@@ -242,7 +292,7 @@ public class MapsActivity extends AppCompatActivity
 
                         }
                     });
-                    electrician.setBorderColor(Color.WHITE);
+                    airconditioner.setBorderColor(Color.WHITE);
                 }
 
             }
@@ -267,7 +317,7 @@ public class MapsActivity extends AppCompatActivity
 
                     });
                     computer.setBorderColor(Color.WHITE);
-                    electrician.setBorderColor(Color.WHITE);
+                    airconditioner.setBorderColor(Color.WHITE);
                 } else {
                     rl.animate().translationX(0).setDuration(400);
                     if (mapRipple.isAnimationRunning()) {
@@ -388,8 +438,9 @@ public class MapsActivity extends AppCompatActivity
                                 imm.showSoftInput(device, InputMethodManager.SHOW_IMPLICIT);
                                 device.setVisibility(View.VISIBLE);
                                 company.setVisibility(View.VISIBLE);
+
                                 break;
-                            case "electrician":
+                            case "airconditioner":
                                 device.setVisibility(View.GONE);
                                 Proble.setFocusable(true);
                                 Proble.setFocusableInTouchMode(true);

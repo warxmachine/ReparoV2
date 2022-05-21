@@ -44,8 +44,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="40dp"
             android:layout_marginBottom="20dp"
+
             android:text="Create An Account"
-            android:textColor="#193661"
+            android:textColor="#FFFFFF"
             android:textSize="25dp">
 
         </TextView>
@@ -141,7 +142,7 @@
                 android:buttonTint="#587AAC"
                 android:fontFamily="@font/mainfont"
                 android:text="I agree with Terms &amp; Conditions"
-                android:textColor="#193661" />
+                android:textColor="#FFFFFF" />
 
             <Button
                 android:layout_width="186dp"
@@ -162,7 +163,7 @@
             android:layout_gravity="bottom|center"
             android:gravity="bottom|center"
             android:text="Already have an account? Sign In"
-            android:textColor="#193661">
+            android:textColor="#FFFFFF">
 
         </TextView>
 
