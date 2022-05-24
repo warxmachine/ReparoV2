@@ -38,7 +38,10 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
         Paper.init(this);
-
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        getWindow().setStatusBarColor(Color.TRANSPARENT);
+        @SuppressLint("UseCompatLoadingForDrawables") android.graphics.drawable.Drawable background = ProfileActivity.this.getResources().getDrawable(R.drawable.background2);
+        getWindow().setBackgroundDrawable(background);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_baseline_arrow_back_24);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -69,10 +72,7 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        getWindow().setStatusBarColor(Color.TRANSPARENT);
-        @SuppressLint("UseCompatLoadingForDrawables") android.graphics.drawable.Drawable background = ProfileActivity.this.getResources().getDrawable(R.drawable.background2);
-        getWindow().setBackgroundDrawable(background);
+
         if (!(FirebaseAuth.getInstance().getCurrentUser() == null)) {
             FirebaseDatabase.getInstance().getReference("CustomerInformation").child(FirebaseAuth.getInstance().getUid())
                     .addListenerForSingleValueEvent(new ValueEventListener() {

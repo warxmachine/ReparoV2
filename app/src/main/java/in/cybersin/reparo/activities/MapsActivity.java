@@ -86,6 +86,7 @@ public class MapsActivity extends AppCompatActivity
     CircleImageView profile;
     ImageView next;
     Button submit;
+    ImageView Ham;
     Marker mCurrLocationMarker;
     FusedLocationProviderClient mFusedLocationClient;
     CircleImageView computer, airconditioner, mobile;
@@ -94,6 +95,7 @@ public class MapsActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
         if (Build.VERSION.SDK_INT >= 21) {
             getWindow().getDecorView()
                     .setSystemUiVisibility(
@@ -135,6 +137,7 @@ public class MapsActivity extends AppCompatActivity
         });
         type = "";
         airconditioner = findViewById(R.id.electic);
+        Ham = findViewById(R.id.ham);
         next = findViewById(R.id.next);
         rl = findViewById(R.id.click);
         next.setVisibility(View.GONE);
@@ -151,6 +154,12 @@ public class MapsActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
 
+            }
+        });
+        Ham.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(),ExtraActivity.class));
             }
         });
         computer.setOnClickListener(new View.OnClickListener() {
@@ -181,7 +190,6 @@ public class MapsActivity extends AppCompatActivity
                         mapRipple.stopRippleMapAnimation();
                     }
                     next.animate()
-
                             .alpha(0.0f)
                             .setDuration(300).setListener(new AnimatorListenerAdapter() {
                         @Override
@@ -241,6 +249,8 @@ public class MapsActivity extends AppCompatActivity
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                                         reference.child("prooblem").setValue(Proble.getText().toString());
+                                        reference.child("type").setValue("Air Conditioner");
+
 
                                     }
 
