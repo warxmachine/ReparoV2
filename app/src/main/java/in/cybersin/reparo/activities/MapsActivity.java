@@ -17,6 +17,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -127,6 +128,7 @@ public class MapsActivity extends AppCompatActivity
             Picasso.get().load(R.drawable.person_image);
         }
 
+        checkFirstRun();
 
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -250,7 +252,6 @@ public class MapsActivity extends AppCompatActivity
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                                         reference.child("prooblem").setValue(Proble.getText().toString());
                                         reference.child("type").setValue("Air Conditioner");
-
 
                                     }
 
@@ -673,5 +674,26 @@ public class MapsActivity extends AppCompatActivity
             });
         }*/
 
+    public void checkFirstRun() {
+        boolean isFirstRun = getSharedPreferences("PREFERENCE", MODE_PRIVATE).getBoolean("isFirstRun", true);
+        if (isFirstRun){
+            // Place your dialog code here to display the dialog
+            LayoutInflater factory = LayoutInflater.from(this);
+            final View deleteDialogView = factory.inflate(R.layout.firstalert, null);
+            android.app.AlertDialog.Builder dialog = new android.app.AlertDialog.Builder(MapsActivity.this); // Context, this, etc.
+            dialog.setView(deleteDialogView);
+            dialog.setPositiveButton("CONFIRM", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            dialog.show();
 
+            getSharedPreferences("PREFERENCE", MODE_PRIVATE)
+                    .edit()
+                    .putBoolean("isFirstRun", false)
+                    .apply();
+        }
+    }
 }

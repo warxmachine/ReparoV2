@@ -1,6 +1,7 @@
 package in.cybersin.reparo.activities;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
@@ -46,10 +47,10 @@ public class ExtraActivity extends AppCompatActivity {
         Offers = findViewById(R.id.offers);
         Requests = findViewById(R.id.request);
         Account = findViewById(R.id.account);
+
+
         if (FirebaseAuth.getInstance().getCurrentUser() == null) {
             Name.setText(" Guest");
-
-
         } else {
             FirebaseDatabase.getInstance().getReference("CustomerInformation").child(FirebaseAuth.getInstance().getUid())
                     .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -67,5 +68,29 @@ public class ExtraActivity extends AppCompatActivity {
         }
 
 
+        Settings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ExtraActivity.this,SettingsActivity.class));
+            }
+        });
+        Offers.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ExtraActivity.this,OffersActivity.class));
+            }
+        });
+        Requests.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ExtraActivity.this,RequestActivity.class));
+            }
+        });
+        Account.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ExtraActivity.this,ProfileActivity.class));
+            }
+        });
     }
 }
