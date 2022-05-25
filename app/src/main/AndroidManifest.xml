@@ -12,7 +12,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Reparo">
-        <activity android:name=".activities.ExtraActivity"></activity>
+        <activity android:name=".activities.SettingsActivity"></activity>
+        <activity android:name=".activities.OffersActivity" />
+        <activity android:name=".activities.RequestActivity" />
+        <activity android:name=".activities.ExtraActivity" />
         <activity android:name=".activities.LoginRegistration" />
         <activity android:name=".activities.ProfileActivity" />
 

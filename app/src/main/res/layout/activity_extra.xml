@@ -73,21 +73,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/account"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="left"
-                android:layout_margin="15dp"
-                android:layout_marginTop="20dp"
-                android:drawableLeft="@drawable/ic_outline_person_outline_24"
-                android:drawablePadding="10dp"
-                android:gravity="left"
-                android:padding="12dp"
-                android:text="Account"
-                android:textColor="@color/black"
-                android:textSize="15dp" />
-
             <View
                 android:layout_width="wrap_content"
                 android:layout_height="2dp"
@@ -106,29 +91,6 @@
                 android:gravity="left"
                 android:padding="12dp"
                 android:text="Your Requests"
-                android:textColor="@color/black"
-                android:textSize="15dp">
-
-            </TextView>
-
-            <View
-                android:layout_width="wrap_content"
-                android:layout_height="2dp"
-                android:layout_marginLeft="12dp"
-                android:layout_marginRight="12dp"
-                android:background="#1C1C3E" />
-
-            <TextView
-                android:id="@+id/settings"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="left"
-                android:layout_margin="15dp"
-                android:drawableLeft="@drawable/ic_outline_settings_24"
-                android:drawablePadding="10dp"
-                android:gravity="left"
-                android:padding="12dp"
-                android:text="Settings"
                 android:textColor="@color/black"
                 android:textSize="15dp">
 
@@ -163,7 +125,54 @@
                 android:layout_marginLeft="12dp"
                 android:layout_marginRight="12dp"
                 android:background="#1C1C3E" />
+
+            <TextView
+                android:id="@+id/account"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_margin="15dp"
+                android:layout_marginTop="20dp"
+                android:drawableLeft="@drawable/ic_outline_person_outline_24"
+                android:drawablePadding="10dp"
+                android:gravity="left"
+                android:padding="12dp"
+                android:text="Account"
+                android:textColor="@color/black"
+                android:textSize="15dp" />
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="2dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:background="#1C1C3E" />
+
+            <TextView
+                android:id="@+id/settings"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_margin="15dp"
+                android:drawableLeft="@drawable/ic_outline_settings_24"
+                android:drawablePadding="10dp"
+                android:gravity="left"
+                android:padding="12dp"
+                android:text="Settings"
+                android:textColor="@color/black"
+                android:textSize="15dp">
+
+            </TextView>
+            <TextView
+                android:id="@+id/hint"
+                android:layout_margin="20dp"
+                android:text="Thank you for choosing Reparo, We are constantly working in providing you the best experience."
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content">
+
+            </TextView>
         </LinearLayout>
+
     </ScrollView>
 
 </LinearLayout>
