@@ -51,7 +51,11 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -66,6 +70,8 @@ import java.util.Objects;
 import de.hdodenhof.circleimageview.CircleImageView;
 import in.cybersin.reparo.R;
 import in.cybersin.reparo.model.Customer;
+
+import static androidx.constraintlayout.widget.Constraints.TAG;
 
 public class MapsActivity extends AppCompatActivity
         implements OnMapReadyCallback, LocationListener {
@@ -91,6 +97,8 @@ public class MapsActivity extends AppCompatActivity
     Marker mCurrLocationMarker;
     FusedLocationProviderClient mFusedLocationClient;
     CircleImageView computer, airconditioner, mobile;
+    FirebaseAuth mAuth;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,10 +120,12 @@ public class MapsActivity extends AppCompatActivity
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     Customer customer = snapshot.getValue(Customer.class);
-                    if (!(customer.getAvatarName() == null)) {
-                        Picasso.get().load(customer.getAvatarName()).into(profile);
-                    } else {
-                        Picasso.get().load(R.drawable.person_image);
+                    if (customer != null) {
+                        if (customer.getAvatarName()!=null ) {
+                            Picasso.get().load(customer.getAvatarName()).into(profile);
+                        } else {
+                            Picasso.get().load(R.drawable.person_image);
+                        }
                     }
                 }
 
@@ -138,6 +148,7 @@ public class MapsActivity extends AppCompatActivity
             }
         });
         type = "";
+        mAuth = FirebaseAuth.getInstance();
         airconditioner = findViewById(R.id.electic);
         Ham = findViewById(R.id.ham);
         next = findViewById(R.id.next);
@@ -158,6 +169,26 @@ public class MapsActivity extends AppCompatActivity
 
             }
         });
+        if(FirebaseAuth.getInstance().getCurrentUser() == null){
+            mAuth.signInAnonymously()
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                // Sign in success, update UI with the signed-in user's information
+                                Log.d(TAG, "signInAnonymously:success");
+                                FirebaseUser user = mAuth.getCurrentUser();
+                            } else {
+                                // If sign in fails, display a message to the user.
+                                Log.w(TAG, "signInAnonymously:failure", task.getException());
+                                Toast.makeText(MapsActivity.this, "Authentication failed.",
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+        }
+
+
         Ham.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

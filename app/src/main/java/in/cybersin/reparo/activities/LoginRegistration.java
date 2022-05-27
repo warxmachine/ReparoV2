@@ -1,47 +1,52 @@
- package in.cybersin.reparo.activities;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentTransaction;
+package in.cybersin.reparo.activities;
 
 import android.annotation.SuppressLint;
-import android.app.ProgressDialog;
-
-import in.cybersin.reparo.common.Common;
-import in.cybersin.reparo.model.Customer;
-import io.paperdb.Paper;
-
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.Toolbar;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.gmail.samehadar.iosdialog.IOSDialog;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.common.collect.Maps;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import in.cybersin.reparo.R;
+import in.cybersin.reparo.common.Common;
+import in.cybersin.reparo.model.Customer;
+import io.paperdb.Paper;
+
+import static androidx.constraintlayout.widget.Constraints.TAG;
 
 public class LoginRegistration extends AppCompatActivity {
     TextView Signup;
     IOSDialog dialog0;
     Toolbar toolbar;
     Button signin;
+    FirebaseAuth mAuth;
     EditText Email, Password, Phone, Name;
 
     @Override
@@ -63,11 +68,12 @@ public class LoginRegistration extends AppCompatActivity {
                 .build();
         dialog0.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         Signup = findViewById(R.id.signup);
+        mAuth = FirebaseAuth.getInstance();
         Signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 setContentView(R.layout.fragment_register);
-                Button create=findViewById(R.id.create);
+                Button create = findViewById(R.id.create);
                 create.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -104,65 +110,57 @@ public class LoginRegistration extends AppCompatActivity {
                             return;
 
                         }
-                        if (TextUtils.isEmpty(Email.getText().toString())) {
-                            Snackbar.make(parentLayout, "Please enter your Email!", Snackbar.LENGTH_SHORT)
+                        if (TextUtils.isEmpty(Name.getText().toString())) {
+                            Snackbar.make(parentLayout, "Please enter your Name!", Snackbar.LENGTH_SHORT)
                                     .show();
                             dialog0.dismiss();
                             return;
 
                         }
-                        FirebaseAuth.getInstance().createUserWithEmailAndPassword(Email.getText().toString(), Password.getText().toString())
-                                .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                        AuthCredential credential = EmailAuthProvider.getCredential(Email.getText().toString(), Password.getText().toString());
+                        mAuth.getCurrentUser().linkWithCredential(credential)
+                                .addOnCompleteListener(LoginRegistration.this, new OnCompleteListener<AuthResult>() {
                                     @Override
-                                    public void onSuccess(AuthResult authResult) {
-                                        Customer customer = new Customer();
-                                        customer.setName(Name.getText().toString());
-                                        customer.setEmail(Email.getText().toString());
-                                        customer.setPhone(Phone.getText().toString());
-                                        customer.setUid(FirebaseAuth.getInstance().getUid());
-                                        FirebaseDatabase.getInstance().getReference("CustomerInformation").child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                                                .setValue(customer)
-                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                    @Override
-                                                    public void onSuccess(Void aVoid) {
-                                                        Snackbar.make(parentLayout, "Registered SuccessFully, Now you are good to go.", Snackbar.LENGTH_SHORT)
-                                                                .show();
-                                                        FirebaseAuth.getInstance().signInWithEmailAndPassword(Email.getText().toString(),Password.getText().toString())
-                                                                .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-                                                                    @Override
-                                                                    public void onSuccess(AuthResult authResult) {
-                                                                        Paper.book().write(Common.userField, Email.getText().toString());
-                                                                        Paper.book().write(Common.passfield, Password.getText().toString());
-                                                                        Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
-                                                                        startActivity(intent);
-                                                                        dialog0.dismiss();
-                                                                    }
-                                                                }).addOnFailureListener(new OnFailureListener() {
-                                                            @Override
-                                                            public void onFailure(@NonNull  Exception e) {
+                                    public void onComplete(@NonNull Task<AuthResult> task) {
+                                        if (task.isSuccessful()) {
 
-                                                            }
-                                                        });
-                                                        dialog0.dismiss();
-                                                    }
-                                                })
-                                                .addOnFailureListener(new OnFailureListener() {
-                                                    @Override
-                                                    public void onFailure(@NonNull Exception e) {
-                                                        Snackbar.make(parentLayout, "Registration Failed!" + e.getMessage(), Snackbar.LENGTH_SHORT)
-                                                                .show();
-                                                        dialog0.dismiss();
-                                                    }
-                                                });
+                                            FirebaseDatabase.getInstance().getReference("CustomerInformation").child(FirebaseAuth.getInstance().getUid())
+                                                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                                                        @Override
+                                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                            DatabaseReference reference= FirebaseDatabase.getInstance().getReference("CustomerInformation").child(FirebaseAuth.getInstance().getUid());
+
+
+                                                            reference.child("name").setValue(Name.getText().toString());
+                                                            reference.child("email").setValue(Email.getText().toString());
+                                                            reference.child("Phone").setValue(Phone.getText().toString());
+                                                            Paper.book().write(Common.userField, Email.getText().toString());
+                                                            Paper.book().write(Common.passfield, Password.getText().toString());
+                                                            Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
+                                                            startActivity(intent);
+                                                            dialog0.dismiss();
+                                                        }
+
+                                                        @Override
+                                                        public void onCancelled(@NonNull DatabaseError error) {
+                                                            Snackbar.make(parentLayout, "Registration Failed!" + error.getMessage(), Snackbar.LENGTH_SHORT)
+                                                                    .show();
+                                                            dialog0.dismiss();
+                                                        }
+                                                    });
+
+                                            Log.d(TAG, "linkWithCredential:success");
+                                            FirebaseUser user = task.getResult().getUser();
+                                        } else {
+                                            Log.w(TAG, "linkWithCredential:failure", task.getException());
+                                            Toast.makeText(LoginRegistration.this, "Authentication failed.",
+                                                    Toast.LENGTH_SHORT).show();
+                                            Snackbar.make(parentLayout, "Registration Failed!" + task.getException(), Snackbar.LENGTH_SHORT)
+                                                    .show();
+                                            dialog0.dismiss();
+                                        }
                                     }
-                                }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Snackbar.make(parentLayout, "Registration Failed!" + e.getMessage(), Snackbar.LENGTH_SHORT)
-                                        .show();
-                                dialog0.dismiss();
-                            }
-                        });
+                                });
 
                         toolbar = (Toolbar) findViewById(R.id.toolbar);
                         toolbar.setNavigationIcon(R.drawable.ic_baseline_arrow_back_24);
@@ -196,7 +194,7 @@ public class LoginRegistration extends AppCompatActivity {
                 }
                 if (TextUtils.isEmpty(Password.getText().toString())) {
                     Snackbar.make(getWindow().getDecorView().getRootView(), "Please enter your Password!", Snackbar.LENGTH_SHORT)
-                    .show();
+                            .show();
                     return;
                 }
 
@@ -218,7 +216,7 @@ public class LoginRegistration extends AppCompatActivity {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Snackbar.make(getWindow().getDecorView().getRootView(), "Something went wrong !" + e, Snackbar.LENGTH_SHORT)
-                        .show();
+                                .show();
                         dialog0.dismiss();
                     }
                 });
@@ -253,6 +251,7 @@ public class LoginRegistration extends AppCompatActivity {
                                         dialog0.dismiss();
                                         finish();
                                     }
+
                                     @Override
                                     public void onCancelled(DatabaseError databaseError) {
 
