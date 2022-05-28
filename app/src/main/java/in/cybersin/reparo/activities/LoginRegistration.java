@@ -197,7 +197,8 @@ public class LoginRegistration extends AppCompatActivity {
                             .show();
                     return;
                 }
-
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                user.delete();
                 FirebaseAuth.getInstance().signInWithEmailAndPassword(Email.getText().toString(), Password.getText().toString())
                         .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                             @Override

@@ -80,15 +80,18 @@ public class ProfileActivity extends AppCompatActivity {
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             Customer customer = snapshot.getValue(Customer.class);
                             if (customer != null) {
-                                Name.setText(customer.getName());
-                                Email.setText(customer.getEmail());
-                                Phone.setText(customer.getPhone());
-                                Signin.setVisibility(View.GONE);
-                                if (!(customer.getAvatarName() == null)) {
-                                    Picasso.get().load(customer.getAvatarName()).into(ImageView);
-                                } else {
-                                    Picasso.get().load(R.drawable.person_image);
+                                if (customer.getName() != null){
+                                    Name.setText(customer.getName());
+                                    Email.setText(customer.getEmail());
+                                    Phone.setText(customer.getPhone());
+                                    Signin.setVisibility(View.GONE);
+                                    if (!(customer.getAvatarName() == null)) {
+                                        Picasso.get().load(customer.getAvatarName()).into(ImageView);
+                                    } else {
+                                        Picasso.get().load(R.drawable.person_image);
+                                    }
                                 }
+
                             }else{
                                 Name.setText("Hello, Guest");
                                 Email.setVisibility(View.GONE);

@@ -20,6 +20,7 @@
         android:hint="Phone Number"
         android:textSize="13dp"
         android:drawablePadding="10dp"
+        android:id="@+id/phone"
         android:padding="15dp"
         android:drawableLeft="@drawable/ic_outline_local_phone_24"
         android:layout_width="match_parent">

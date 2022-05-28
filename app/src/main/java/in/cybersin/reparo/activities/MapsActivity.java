@@ -16,6 +16,7 @@ import android.location.LocationListener;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -64,7 +65,10 @@ import com.google.firebase.database.ValueEventListener;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -283,6 +287,24 @@ public class MapsActivity extends AppCompatActivity
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                                         reference.child("prooblem").setValue(Proble.getText().toString());
                                         reference.child("type").setValue("Air Conditioner");
+                                        FirebaseDatabase.getInstance().getReference("CustomerInformation").child(FirebaseAuth.getInstance().getUid())
+                                                .addListenerForSingleValueEvent(new ValueEventListener() {
+                                                    @Override
+                                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                        Customer customer = snapshot.getValue(Customer.class);
+                                                        reference.child("phone").setValue(customer.getPhone());
+                                                        String currentDate = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
+                                                        String currentTime = new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
+                                                        reference.child("time").setValue(currentDate+", "+currentTime);
+                                                        Toast.makeText(getApplicationContext(),"Your request has been received We'll contact you soon!", Toast.LENGTH_LONG).show();
+                                                    }
+
+                                                    @Override
+                                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                                    }
+                                                });
+
 
                                     }
 
@@ -706,16 +728,23 @@ public class MapsActivity extends AppCompatActivity
         }*/
 
     public void checkFirstRun() {
+        EditText phone;
         boolean isFirstRun = getSharedPreferences("PREFERENCE", MODE_PRIVATE).getBoolean("isFirstRun", true);
         if (isFirstRun){
             // Place your dialog code here to display the dialog
             LayoutInflater factory = LayoutInflater.from(this);
             final View deleteDialogView = factory.inflate(R.layout.firstalert, null);
+            phone= deleteDialogView.findViewById(R.id.phone);
             android.app.AlertDialog.Builder dialog = new android.app.AlertDialog.Builder(MapsActivity.this); // Context, this, etc.
             dialog.setView(deleteDialogView);
             dialog.setPositiveButton("CONFIRM", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
+                    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("CustomerInformation").child(FirebaseAuth.getInstance().getUid());
+                    if(TextUtils.isEmpty(phone.getText().toString())){
+                        Toast.makeText(getApplicationContext(), "Enter Phone Number",Toast.LENGTH_LONG).show();
+                    }
+                    databaseReference.child("phone").setValue(phone.getText().toString());
                     dialog.dismiss();
                 }
             });
