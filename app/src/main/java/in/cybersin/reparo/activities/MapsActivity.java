@@ -253,7 +253,39 @@ public class MapsActivity extends AppCompatActivity
                                 .addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        reference = FirebaseDatabase.getInstance().getReference("Requests").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid()));
+                                        FirebaseDatabase.getInstance().getReference("Requests").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid()))
+                                                .addListenerForSingleValueEvent(new ValueEventListener() {
+                                                    @Override
+                                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                        reference.child("prooblem").setValue(Proble.getText().toString());
+                                                        reference.child("type").setValue("Computer");
+                                                        FirebaseDatabase.getInstance().getReference("CustomerInformation").child(FirebaseAuth.getInstance().getUid())
+                                                                .addListenerForSingleValueEvent(new ValueEventListener() {
+                                                                    @Override
+                                                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                                        Customer customer = snapshot.getValue(Customer.class);
+                                                                        reference.child("phone").setValue(customer.getPhone());
+                                                                        String currentDate = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
+                                                                        String currentTime = new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
+                                                                        reference.child("time").setValue(currentDate+", "+currentTime);
+                                                                        Toast.makeText(getApplicationContext(),"Your request has been received We'll contact you soon!", Toast.LENGTH_LONG).show();
+                                                                    }
 
+                                                                    @Override
+                                                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                                                    }
+                                                                });
+
+
+                                                    }
+
+                                                    @Override
+                                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                                    }
+                                                });
                                     }
 
                                     @Override
@@ -269,7 +301,39 @@ public class MapsActivity extends AppCompatActivity
                                 .addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        reference = FirebaseDatabase.getInstance().getReference("Requests").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid()));
+                                        FirebaseDatabase.getInstance().getReference("Requests").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid()))
+                                                .addListenerForSingleValueEvent(new ValueEventListener() {
+                                                    @Override
+                                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                        reference.child("prooblem").setValue(Proble.getText().toString());
+                                                        reference.child("type").setValue("phone");
+                                                        FirebaseDatabase.getInstance().getReference("CustomerInformation").child(FirebaseAuth.getInstance().getUid())
+                                                                .addListenerForSingleValueEvent(new ValueEventListener() {
+                                                                    @Override
+                                                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                                        Customer customer = snapshot.getValue(Customer.class);
+                                                                        reference.child("phone").setValue(customer.getPhone());
+                                                                        String currentDate = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
+                                                                        String currentTime = new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
+                                                                        reference.child("time").setValue(currentDate+", "+currentTime);
+                                                                        Toast.makeText(getApplicationContext(),"Your request has been received We'll contact you soon!", Toast.LENGTH_LONG).show();
+                                                                    }
 
+                                                                    @Override
+                                                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                                                    }
+                                                                });
+
+
+                                                    }
+
+                                                    @Override
+                                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                                    }
+                                                });
                                     }
 
                                     @Override
@@ -366,7 +430,7 @@ public class MapsActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 if (mobile.getBorderColor() == Color.WHITE) {
-                    type = "mobile";
+                    type = "phone";
 
                     mobile.setBorderColor(Color.GREEN);
                     rl.animate().translationX(-20).setDuration(400);
@@ -737,12 +801,19 @@ public class MapsActivity extends AppCompatActivity
             phone= deleteDialogView.findViewById(R.id.phone);
             android.app.AlertDialog.Builder dialog = new android.app.AlertDialog.Builder(MapsActivity.this); // Context, this, etc.
             dialog.setView(deleteDialogView);
+            dialog.setCancelable(false);
             dialog.setPositiveButton("CONFIRM", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("CustomerInformation").child(FirebaseAuth.getInstance().getUid());
                     if(TextUtils.isEmpty(phone.getText().toString())){
                         Toast.makeText(getApplicationContext(), "Enter Phone Number",Toast.LENGTH_LONG).show();
+
+                        getSharedPreferences("PREFERENCE", MODE_PRIVATE)
+                                .edit()
+                                .putBoolean("isFirstRun", true)
+                                .apply();
+                        return;
                     }
                     databaseReference.child("phone").setValue(phone.getText().toString());
                     dialog.dismiss();

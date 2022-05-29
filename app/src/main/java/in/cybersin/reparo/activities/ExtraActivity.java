@@ -48,16 +48,21 @@ public class ExtraActivity extends AppCompatActivity {
         Requests = findViewById(R.id.request);
         Account = findViewById(R.id.account);
 
-
-        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
-            Name.setText(" Guest");
-        } else {
             FirebaseDatabase.getInstance().getReference("CustomerInformation").child(FirebaseAuth.getInstance().getUid())
                     .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             Customer customer = snapshot.getValue(Customer.class);
-                            Name.setText(" " + customer.getName());
+                            if(customer!=null){
+                                if(customer.getName()!=null) {
+                                    Name.setText(" " + customer.getName());
+                                }
+                                else{
+                                    Name.setText(" Guest");
+                                }
+                            }else{
+                                Name.setText(" Guest");
+                            }
                         }
 
                         @Override
@@ -65,8 +70,6 @@ public class ExtraActivity extends AppCompatActivity {
 
                         }
                     });
-        }
-
 
         Settings.setOnClickListener(new View.OnClickListener() {
             @Override

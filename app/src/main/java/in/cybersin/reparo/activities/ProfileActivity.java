@@ -73,7 +73,6 @@ public class ProfileActivity extends AppCompatActivity {
         });
 
 
-        if (!(FirebaseAuth.getInstance().getCurrentUser() == null)) {
             FirebaseDatabase.getInstance().getReference("CustomerInformation").child(FirebaseAuth.getInstance().getUid())
                     .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
@@ -91,6 +90,13 @@ public class ProfileActivity extends AppCompatActivity {
                                         Picasso.get().load(R.drawable.person_image);
                                     }
                                 }
+                                else{
+                                    Name.setText("Hello, Guest");
+                                    Email.setVisibility(View.GONE);
+                                    Phone.setVisibility(View.GONE);
+                                    signout.setVisibility(View.GONE);
+                                    Picasso.get().load(R.drawable.person_image);
+                                }
 
                             }else{
                                 Name.setText("Hello, Guest");
@@ -107,13 +113,7 @@ public class ProfileActivity extends AppCompatActivity {
 
                         }
                     });
-        } else {
-            Name.setText("Hello, Guest");
-            Email.setVisibility(View.GONE);
-            Phone.setVisibility(View.GONE);
-            signout.setVisibility(View.GONE);
-            Picasso.get().load(R.drawable.person_image);
-        }
+
     }
 
 }
