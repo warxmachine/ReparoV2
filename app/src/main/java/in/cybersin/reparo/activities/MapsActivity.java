@@ -79,7 +79,6 @@ import static androidx.constraintlayout.widget.Constraints.TAG;
 
 public class MapsActivity extends AppCompatActivity
         implements OnMapReadyCallback, LocationListener {
-    public static boolean mMapIsTouched = false;
 
     GoogleMap mGoogleMap;
     MapRipple mapRipple;
@@ -87,13 +86,10 @@ public class MapsActivity extends AppCompatActivity
     LocationRequest mLocationRequest;
     LinearLayout rl;
     Location mLastLocation;
-    boolean ispc = true;
-    boolean ismo = true;
     LinearLayout container;
     DatabaseReference reference;
     EditText Proble, device, company;
     String type;
-    boolean iselec = true;
     CircleImageView profile;
     ImageView next;
     Button submit;
