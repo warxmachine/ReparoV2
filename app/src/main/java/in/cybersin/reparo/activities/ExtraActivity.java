@@ -43,7 +43,7 @@ public class ExtraActivity extends AppCompatActivity {
 
         });
         Name = findViewById(R.id.name);
-        Settings = findViewById(R.id.settings);
+     //   Settings = findViewById(R.id.settings);
         Offers = findViewById(R.id.offers);
         Requests = findViewById(R.id.request);
         Account = findViewById(R.id.account);
@@ -71,12 +71,12 @@ public class ExtraActivity extends AppCompatActivity {
                         }
                     });
 
-        Settings.setOnClickListener(new View.OnClickListener() {
+        /*Settings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(ExtraActivity.this,SettingsActivity.class));
             }
-        });
+        });*/
         Offers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

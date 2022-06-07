@@ -239,147 +239,6 @@ public class MapsActivity extends AppCompatActivity
 
             }
         });
-        submit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                switch (type) {
-                    case "computer": {
-                        reference = FirebaseDatabase.getInstance().getReference("Requests").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid()));
-                        FirebaseDatabase.getInstance().getReference("Requests").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid()))
-                                .addListenerForSingleValueEvent(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                        reference = FirebaseDatabase.getInstance().getReference("Requests").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid()));
-                                        FirebaseDatabase.getInstance().getReference("Requests").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid()))
-                                                .addListenerForSingleValueEvent(new ValueEventListener() {
-                                                    @Override
-                                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                        reference.child("prooblem").setValue(Proble.getText().toString());
-                                                        reference.child("type").setValue("Computer");
-                                                        FirebaseDatabase.getInstance().getReference("CustomerInformation").child(FirebaseAuth.getInstance().getUid())
-                                                                .addListenerForSingleValueEvent(new ValueEventListener() {
-                                                                    @Override
-                                                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                                        Customer customer = snapshot.getValue(Customer.class);
-                                                                        reference.child("phone").setValue(customer.getPhone());
-                                                                        String currentDate = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
-                                                                        String currentTime = new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
-                                                                        reference.child("time").setValue(currentDate+", "+currentTime);
-                                                                        Toast.makeText(getApplicationContext(),"Your request has been received We'll contact you soon!", Toast.LENGTH_LONG).show();
-                                                                    }
-
-                                                                    @Override
-                                                                    public void onCancelled(@NonNull DatabaseError error) {
-
-                                                                    }
-                                                                });
-
-
-                                                    }
-
-                                                    @Override
-                                                    public void onCancelled(@NonNull DatabaseError error) {
-
-                                                    }
-                                                });
-                                    }
-
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError error) {
-
-                                    }
-                                });
-
-                    }
-                    case "phone": {
-                        reference = FirebaseDatabase.getInstance().getReference("Requests").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid()));
-                        FirebaseDatabase.getInstance().getReference("Requests").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid()))
-                                .addListenerForSingleValueEvent(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                        reference = FirebaseDatabase.getInstance().getReference("Requests").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid()));
-                                        FirebaseDatabase.getInstance().getReference("Requests").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid()))
-                                                .addListenerForSingleValueEvent(new ValueEventListener() {
-                                                    @Override
-                                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                        reference.child("problem").setValue(Proble.getText().toString());
-                                                        reference.child("device").setValue(device.getText().toString());
-                                                        reference.child("company").setValue(company.getText().toString());
-                                                        reference.child("type").setValue("phone");
-                                                        FirebaseDatabase.getInstance().getReference("CustomerInformation").child(FirebaseAuth.getInstance().getUid())
-                                                                .addListenerForSingleValueEvent(new ValueEventListener() {
-                                                                    @Override
-                                                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                                        Customer customer = snapshot.getValue(Customer.class);
-                                                                        reference.child("phone").setValue(customer.getPhone());
-                                                                        String currentDate = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
-                                                                        String currentTime = new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
-                                                                        reference.child("time").setValue(currentDate+", "+currentTime);
-                                                                        Toast.makeText(getApplicationContext(),"Your request has been received We'll contact you soon!", Toast.LENGTH_LONG).show();
-                                                                    }
-
-                                                                    @Override
-                                                                    public void onCancelled(@NonNull DatabaseError error) {
-
-                                                                    }
-                                                                });
-
-
-                                                    }
-
-                                                    @Override
-                                                    public void onCancelled(@NonNull DatabaseError error) {
-
-                                                    }
-                                                });
-                                    }
-
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError error) {
-
-                                    }
-                                });
-
-                    }
-                    case "airconditioner": {
-                        reference = FirebaseDatabase.getInstance().getReference("Requests").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid()));
-                        FirebaseDatabase.getInstance().getReference("Requests").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid()))
-                                .addListenerForSingleValueEvent(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                        reference.child("problem").setValue(Proble.getText().toString());
-                                        reference.child("type").setValue("Air Conditioner");
-                                        FirebaseDatabase.getInstance().getReference("CustomerInformation").child(FirebaseAuth.getInstance().getUid())
-                                                .addListenerForSingleValueEvent(new ValueEventListener() {
-                                                    @Override
-                                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                        Customer customer = snapshot.getValue(Customer.class);
-                                                        reference.child("phone").setValue(customer.getPhone());
-                                                        String currentDate = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
-                                                        String currentTime = new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
-                                                        reference.child("time").setValue(currentDate+", "+currentTime);
-                                                        Toast.makeText(getApplicationContext(),"Your request has been received We'll contact you soon!", Toast.LENGTH_LONG).show();
-                                                    }
-
-                                                    @Override
-                                                    public void onCancelled(@NonNull DatabaseError error) {
-
-                                                    }
-                                                });
-
-
-                                    }
-
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError error) {
-
-                                    }
-                                });
-
-                    }
-                }
-            }
-        });
         airconditioner.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -462,6 +321,159 @@ public class MapsActivity extends AppCompatActivity
                     mobile.setBorderColor(Color.WHITE);
                 }
 
+            }
+        });
+
+        submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch (type) {
+
+                    case "computer": {
+                        reference = FirebaseDatabase.getInstance().getReference("Requests").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid()));
+                        FirebaseDatabase.getInstance().getReference("Requests").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid()))
+                                .addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        reference = FirebaseDatabase.getInstance().getReference("Requests").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid()));
+                                        FirebaseDatabase.getInstance().getReference("Requests").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid()))
+                                                .addListenerForSingleValueEvent(new ValueEventListener() {
+                                                    @Override
+                                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                        reference.child("problem").setValue(Proble.getText().toString());
+                                                        reference.child("type").setValue("Computer");
+                                                        FirebaseDatabase.getInstance().getReference("CustomerInformation").child(FirebaseAuth.getInstance().getUid())
+                                                                .addListenerForSingleValueEvent(new ValueEventListener() {
+                                                                    @Override
+                                                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                                        Customer customer = snapshot.getValue(Customer.class);
+                                                                        reference.child("phone").setValue(customer.getPhone());
+                                                                        String currentDate = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
+                                                                        String currentTime = new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
+                                                                        reference.child("time").setValue(currentDate+", "+currentTime);
+                                                                        reference.child("location").setValue(mLastLocation.getLatitude()+", "+mLastLocation.getLongitude());
+                                                                        Toast.makeText(getApplicationContext(),"Your request has been received We'll contact you soon!", Toast.LENGTH_LONG).show();
+                                                                    }
+
+                                                                    @Override
+                                                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                                                    }
+                                                                });
+
+
+                                                    }
+
+                                                    @Override
+                                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                                    }
+                                                });
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
+                        break;
+
+                    }
+                    case "phone": {
+                        reference = FirebaseDatabase.getInstance().getReference("Requests").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid()));
+                        FirebaseDatabase.getInstance().getReference("Requests").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid()))
+                                .addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        reference = FirebaseDatabase.getInstance().getReference("Requests").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid()));
+                                        FirebaseDatabase.getInstance().getReference("Requests").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid()))
+                                                .addListenerForSingleValueEvent(new ValueEventListener() {
+                                                    @Override
+                                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                        reference.child("problem").setValue(Proble.getText().toString());
+                                                        reference.child("device").setValue(device.getText().toString());
+                                                        reference.child("company").setValue(company.getText().toString());
+                                                        reference.child("type").setValue("phone");
+                                                        FirebaseDatabase.getInstance().getReference("CustomerInformation").child(FirebaseAuth.getInstance().getUid())
+                                                                .addListenerForSingleValueEvent(new ValueEventListener() {
+                                                                    @Override
+                                                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                                        Customer customer = snapshot.getValue(Customer.class);
+                                                                        reference.child("phone").setValue(customer.getPhone());
+                                                                        String currentDate = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
+                                                                        String currentTime = new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
+                                                                        reference.child("time").setValue(currentDate+", "+currentTime);
+                                                                        reference.child("location").setValue(mLastLocation.getLatitude()+", "+mLastLocation.getLongitude());
+
+                                                                        Toast.makeText(getApplicationContext(),"Your request has been received We'll contact you soon!", Toast.LENGTH_LONG).show();
+                                                                    }
+
+                                                                    @Override
+                                                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                                                    }
+                                                                });
+
+
+                                                    }
+
+                                                    @Override
+                                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                                    }
+                                                });
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
+                        break;
+
+
+                    }
+                    case "airconditioner": {
+                        reference = FirebaseDatabase.getInstance().getReference("Requests").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid()));
+                        FirebaseDatabase.getInstance().getReference("Requests").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid()))
+                                .addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        reference.child("problem").setValue(Proble.getText().toString());
+                                        reference.child("type").setValue("Air Conditioner");
+                                        FirebaseDatabase.getInstance().getReference("CustomerInformation").child(FirebaseAuth.getInstance().getUid())
+                                                .addListenerForSingleValueEvent(new ValueEventListener() {
+                                                    @Override
+                                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                        Customer customer = snapshot.getValue(Customer.class);
+                                                        reference.child("phone").setValue(customer.getPhone());
+                                                        String currentDate = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
+                                                        String currentTime = new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
+                                                        reference.child("time").setValue(currentDate+", "+currentTime);
+                                                        reference.child("location").setValue(mLastLocation.getLatitude()+", "+mLastLocation.getLongitude());
+
+                                                        Toast.makeText(getApplicationContext(),"Your request has been received We'll contact you soon!", Toast.LENGTH_LONG).show();
+                                                    }
+
+                                                    @Override
+                                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                                    }
+                                                });
+
+
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
+                        break;
+
+
+                    }
+                }
             }
         });
 
