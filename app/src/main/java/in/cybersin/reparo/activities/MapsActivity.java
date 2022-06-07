@@ -302,7 +302,9 @@ public class MapsActivity extends AppCompatActivity
                                                 .addListenerForSingleValueEvent(new ValueEventListener() {
                                                     @Override
                                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                        reference.child("prooblem").setValue(Proble.getText().toString());
+                                                        reference.child("problem").setValue(Proble.getText().toString());
+                                                        reference.child("device").setValue(device.getText().toString());
+                                                        reference.child("company").setValue(company.getText().toString());
                                                         reference.child("type").setValue("phone");
                                                         FirebaseDatabase.getInstance().getReference("CustomerInformation").child(FirebaseAuth.getInstance().getUid())
                                                                 .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -345,7 +347,7 @@ public class MapsActivity extends AppCompatActivity
                                 .addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                        reference.child("prooblem").setValue(Proble.getText().toString());
+                                        reference.child("problem").setValue(Proble.getText().toString());
                                         reference.child("type").setValue("Air Conditioner");
                                         FirebaseDatabase.getInstance().getReference("CustomerInformation").child(FirebaseAuth.getInstance().getUid())
                                                 .addListenerForSingleValueEvent(new ValueEventListener() {
