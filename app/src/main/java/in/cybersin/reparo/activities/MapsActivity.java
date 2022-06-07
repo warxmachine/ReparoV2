@@ -347,6 +347,7 @@ public class MapsActivity extends AppCompatActivity
                                                                     @Override
                                                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                                                                         Customer customer = snapshot.getValue(Customer.class);
+
                                                                         reference.child("phone").setValue(customer.getPhone());
                                                                         String currentDate = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
                                                                         String currentTime = new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());

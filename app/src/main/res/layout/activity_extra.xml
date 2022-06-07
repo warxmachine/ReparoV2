@@ -80,7 +80,7 @@
                 android:layout_marginRight="12dp"
                 android:background="#1C1C3E" />
 
-            <TextView
+         <!--   <TextView
                 android:id="@+id/request"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -94,7 +94,7 @@
                 android:textColor="@color/black"
                 android:textSize="15dp">
 
-            </TextView>
+            </TextView>-->
 
             <View
                 android:layout_width="wrap_content"
@@ -169,6 +169,18 @@
                 android:text="Thank you for choosing Reparo, We are constantly working in providing you the best experience."
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content">
+
+            </TextView>
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="match_parent"
+                android:gravity="center"
+                android:textSize="15dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Call us at +91 8622020209 for feedback or any Help!"
+                android:textColor="@color/black">
 
             </TextView>
         </LinearLayout>
