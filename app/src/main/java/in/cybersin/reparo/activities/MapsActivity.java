@@ -6,6 +6,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -30,12 +31,15 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.arsy.maps_library.MapRipple;
+import com.github.tntkhang.gmailsenderlibrary.GMailSender;
+import com.github.tntkhang.gmailsenderlibrary.GmailListener;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -54,6 +58,16 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.android.play.core.appupdate.AppUpdateInfo;
+import com.google.android.play.core.appupdate.AppUpdateManager;
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory;
+import com.google.android.play.core.install.InstallState;
+import com.google.android.play.core.install.InstallStateUpdatedListener;
+import com.google.android.play.core.install.model.AppUpdateType;
+import com.google.android.play.core.install.model.InstallStatus;
+import com.google.android.play.core.install.model.UpdateAvailability;
+import com.google.android.play.core.tasks.OnSuccessListener;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -98,7 +112,8 @@ public class MapsActivity extends AppCompatActivity
     FusedLocationProviderClient mFusedLocationClient;
     CircleImageView computer, airconditioner, mobile;
     FirebaseAuth mAuth;
-
+    private AppUpdateManager mAppupdateManager;
+    private static final int RC_APP_UPDATE =100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,7 +125,6 @@ public class MapsActivity extends AppCompatActivity
                     .setSystemUiVisibility(
                             View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         }
-
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         getWindow().setStatusBarColor(Color.TRANSPARENT);
         changeStatusBarColor();
@@ -139,7 +153,21 @@ public class MapsActivity extends AppCompatActivity
         }
 
         checkFirstRun();
+        mAppupdateManager = AppUpdateManagerFactory.create(this);
+        mAppupdateManager.getAppUpdateInfo().addOnSuccessListener(new OnSuccessListener<AppUpdateInfo>() {
+            @Override
+            public void onSuccess(AppUpdateInfo result) {
+                if(result.updatePriority() == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS && result.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)){
+                    try {
+                        mAppupdateManager.startUpdateFlowForResult(result,AppUpdateType.IMMEDIATE,MapsActivity.this, RC_APP_UPDATE);
+                    } catch (IntentSender.SendIntentException e) {
+                        e.printStackTrace();
+                    }
+                }
 
+            }
+        });
+        // mAppupdateManager.registerListener(installStateUpdatedListener);
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -213,9 +241,7 @@ public class MapsActivity extends AppCompatActivity
                         }
 
                     });
-
                     mobile.setBorderColor(Color.WHITE);
-
                 } else {
                     computer.setBorderColor(Color.WHITE);
                     rl.animate().translationX(0).setDuration(400);
@@ -233,10 +259,7 @@ public class MapsActivity extends AppCompatActivity
 
                         }
                     });
-
-
                 }
-
             }
         });
         airconditioner.setOnClickListener(new View.OnClickListener() {
@@ -255,9 +278,7 @@ public class MapsActivity extends AppCompatActivity
                         public void onAnimationStart(Animator animation) {
                             super.onAnimationStart(animation);
                             next.setVisibility(View.VISIBLE);
-
                         }
-
                     });
                     computer.setBorderColor(Color.WHITE);
                 } else {
@@ -273,16 +294,12 @@ public class MapsActivity extends AppCompatActivity
                             super.onAnimationEnd(animation);
                             next.setVisibility(View.GONE);
                             container.setVisibility(View.GONE);
-
-
                         }
                     });
                     airconditioner.setBorderColor(Color.WHITE);
                 }
-
             }
         });
-
         mobile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -299,7 +316,6 @@ public class MapsActivity extends AppCompatActivity
                             super.onAnimationStart(animation);
                             next.setVisibility(View.VISIBLE);
                         }
-
                     });
                     computer.setBorderColor(Color.WHITE);
                     airconditioner.setBorderColor(Color.WHITE);
@@ -320,10 +336,8 @@ public class MapsActivity extends AppCompatActivity
                     });
                     mobile.setBorderColor(Color.WHITE);
                 }
-
             }
         });
-
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -353,6 +367,7 @@ public class MapsActivity extends AppCompatActivity
                                                                         String currentTime = new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
                                                                         reference.child("time").setValue(currentDate+", "+currentTime);
                                                                         reference.child("location").setValue(mLastLocation.getLatitude()+", "+mLastLocation.getLongitude());
+                                                                        email(type,customer.getPhone(),mLastLocation.getLatitude()+", "+mLastLocation.getLongitude(),Proble.getText().toString());
                                                                         Toast.makeText(getApplicationContext(),"Your request has been received We'll contact you soon!", Toast.LENGTH_LONG).show();
                                                                     }
 
@@ -405,7 +420,7 @@ public class MapsActivity extends AppCompatActivity
                                                                         String currentTime = new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
                                                                         reference.child("time").setValue(currentDate+", "+currentTime);
                                                                         reference.child("location").setValue(mLastLocation.getLatitude()+", "+mLastLocation.getLongitude());
-
+                                                                        email(type,customer.getPhone(),mLastLocation.getLatitude()+", "+mLastLocation.getLongitude(),Proble.getText().toString()+device.getText().toString()+company.getText().toString());
                                                                         Toast.makeText(getApplicationContext(),"Your request has been received We'll contact you soon!", Toast.LENGTH_LONG).show();
                                                                     }
 
@@ -452,7 +467,7 @@ public class MapsActivity extends AppCompatActivity
                                                         String currentTime = new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
                                                         reference.child("time").setValue(currentDate+", "+currentTime);
                                                         reference.child("location").setValue(mLastLocation.getLatitude()+", "+mLastLocation.getLongitude());
-
+                                                        email(type,customer.getPhone(),mLastLocation.getLatitude()+", "+mLastLocation.getLongitude(),Proble.getText().toString());
                                                         Toast.makeText(getApplicationContext(),"Your request has been received We'll contact you soon!", Toast.LENGTH_LONG).show();
                                                     }
 
@@ -485,6 +500,61 @@ public class MapsActivity extends AppCompatActivity
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if(resultCode ==RC_APP_UPDATE && resultCode!=RESULT_OK){
+            Toast.makeText(this,"Cancel",Toast.LENGTH_SHORT).show();
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+    private InstallStateUpdatedListener installStateUpdatedListener = new InstallStateUpdatedListener() {
+        @Override
+        public void onStateUpdate(@NonNull InstallState state) {
+            if(state.installStatus() == InstallStatus.DOWNLOADED){
+                showCompletedUpdated();
+            }
+        }
+
+        private void showCompletedUpdated() {
+            Snackbar snackbar=Snackbar.make(findViewById(android.R.id.content),"New app is Ready!", Snackbar.LENGTH_INDEFINITE);
+            snackbar.setAction("Install", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mAppupdateManager.completeUpdate();
+                }
+            });
+            snackbar.show();
+        }
+    };
+
+    @Override
+    protected void onStop() {
+       /* if(mAppupdateManager!=null){
+            mAppupdateManager.unregisterListener(installStateUpdatedListener);
+        }*/
+        super.onStop();
+    }
+
+    private void email(String type, String phone, String location, String problem) {
+        GMailSender.withAccount("reparo.noreply@gmail.com", "zqbmbzrthgepmywz")
+                .withTitle("Request Received")
+                .withBody("Request Received "+"Type - "+type+"\n "+"Phone - " +phone+"\n Location - "+location)
+                .withSender(getString(R.string.app_name))
+                .toEmailAddress("shubhsingh20998@gmail.com,cybersinindustries@gmail.com,warxmachine3@gmail.com") // one or multiple addresses separated by a comma
+                .withListenner(new GmailListener() {
+                    @Override
+                    public void sendSuccess() {
+                        Toast.makeText(MapsActivity.this, "Success", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void sendFail(String err) {
+                        Toast.makeText(MapsActivity.this, "Fail: " + err, Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .send();
+    }
+
+    @Override
     public void onPause() {
         super.onPause();
 
@@ -492,6 +562,23 @@ public class MapsActivity extends AppCompatActivity
         if (mFusedLocationClient != null) {
             mFusedLocationClient.removeLocationUpdates(mLocationCallback);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        mAppupdateManager.getAppUpdateInfo().addOnSuccessListener(new OnSuccessListener<AppUpdateInfo>() {
+            @Override
+            public void onSuccess(AppUpdateInfo result) {
+                if(result.updatePriority() == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS){
+                    try {
+                        mAppupdateManager.startUpdateFlowForResult(result,AppUpdateType.IMMEDIATE,MapsActivity.this, RC_APP_UPDATE);
+                    } catch (IntentSender.SendIntentException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+        super.onResume();
     }
 
     @Override
@@ -504,8 +591,7 @@ public class MapsActivity extends AppCompatActivity
             if (!isSuccess)
                 Log.e("ERROR", "Map style not found!!!");
         } catch (Resources.NotFoundException ex) {
-            ex.printStackTrace();
-        }
+         }
         mGoogleMap = googleMap;
         mGoogleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
@@ -577,7 +663,6 @@ public class MapsActivity extends AppCompatActivity
                                 imm.showSoftInput(device, InputMethodManager.SHOW_IMPLICIT);
                                 device.setVisibility(View.VISIBLE);
                                 company.setVisibility(View.VISIBLE);
-
                                 break;
                             case "airconditioner":
                                 device.setVisibility(View.GONE);

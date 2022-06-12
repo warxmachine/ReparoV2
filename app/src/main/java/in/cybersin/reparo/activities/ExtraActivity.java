@@ -45,7 +45,7 @@ public class ExtraActivity extends AppCompatActivity {
         Name = findViewById(R.id.name);
      //   Settings = findViewById(R.id.settings);
         Offers = findViewById(R.id.offers);
-        Requests = findViewById(R.id.request);
+       // Requests = findViewById(R.id.request);
         Account = findViewById(R.id.account);
 
             FirebaseDatabase.getInstance().getReference("CustomerInformation").child(FirebaseAuth.getInstance().getUid())
@@ -83,12 +83,12 @@ public class ExtraActivity extends AppCompatActivity {
                 startActivity(new Intent(ExtraActivity.this,OffersActivity.class));
             }
         });
-        Requests.setOnClickListener(new View.OnClickListener() {
+       /* Requests.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(ExtraActivity.this,RequestActivity.class));
             }
-        });
+        });*/
         Account.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
