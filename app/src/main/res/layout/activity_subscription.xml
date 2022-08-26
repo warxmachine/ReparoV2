@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    tools:context=".activities.SubscriptionActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_gravity="center"
+            android:background="@drawable/edittext"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="?attr/actionBarTheme">
+
+            <TextView
+                android:layout_width="318dp"
+                android:layout_height="wrap_content"
+                android:text="Subscription"
+                android:textColor="#193661"
+                android:textSize="20dp" />
+        </Toolbar>
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/bronze"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="15dp"
+                    android:layout_weight="1"
+                    android:drawableLeft="@drawable/ic_baseline_star_24"
+                    android:drawablePadding="10dp"
+                    android:drawableTint="#513838"
+                    android:gravity="left"
+                    android:padding="12dp"
+                    android:text="Bronze"
+                    android:textColor="#513838"
+                    android:textSize="15dp">
+
+                </TextView>
+
+                <TextView
+                    android:layout_width="78dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:id="@+id/bronzeBuy"
+                    android:background="@drawable/buttonback"
+                    android:padding="10dp"
+                    android:text="₹ 499"
+                    android:textColor="#FFFFFF"
+                    android:textSize="18dp">
+
+                </TextView>
+
+            </LinearLayout>
+            <View
+                android:layout_width="100dp"
+                android:layout_height="2dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:background="#1C1C3E" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/silver"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="15dp"
+                    android:layout_weight="1"
+                    android:drawableLeft="@drawable/ic_baseline_star_24"
+                    android:drawablePadding="10dp"
+                    android:drawableTint="#8E8C8C"
+                    android:gravity="left"
+                    android:padding="12dp"
+                    android:text="Silver"
+                    android:textColor="#7A7979"
+                    android:textSize="15dp">
+
+                </TextView>
+
+                <TextView
+                    android:id="@+id/silverbuy"
+                    android:layout_width="78dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:background="@drawable/buttonback"
+                    android:padding="10dp"
+                    android:text="₹ 999"
+                    android:textColor="#FFFFFF"
+                    android:textSize="18dp"></TextView>
+            </LinearLayout>
+
+            <View
+                android:layout_width="100dp"
+                android:layout_height="2dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:background="#1C1C3E" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/gold"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:layout_margin="15dp"
+                    android:drawableLeft="@drawable/ic_baseline_star_24"
+                    android:drawablePadding="10dp"
+                    android:gravity="left"
+                    android:padding="12dp"
+                    android:text="Gold"
+                    android:textColor="#FF9800"
+                    android:textSize="15dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:padding="10dp"
+                    android:background="@drawable/buttonback"
+                    android:id="@+id/goldbuy"
+                    android:text="₹ 1,999"
+                    android:textColor="#FFFFFF"
+                    android:textSize="18dp">
+
+                </TextView>
+            </LinearLayout>
+
+            <View
+                android:layout_width="100dp"
+                android:layout_height="2dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:background="#1C1C3E" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/plat"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="15dp"
+                    android:drawableLeft="@drawable/ic_baseline_star_24"
+                    android:drawablePadding="10dp"
+                    android:drawableTint="#C8D3D3D3"
+                    android:gravity="left"
+                    android:padding="12dp"
+                    android:layout_weight="1"
+                    android:text="Platinum"
+                    android:textColor="#C8D3D3D3"
+                    android:textSize="15dp">
+
+                </TextView>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:padding="10dp"
+                    android:background="@drawable/buttonback"
+                    android:id="@+id/platibuy"
+
+                    android:text="₹ 2,999"
+                    android:textColor="#FFFFFF"
+                    android:textSize="18dp">
+
+                </TextView>
+            </LinearLayout>
+
+            <View
+                android:layout_width="100dp"
+                android:layout_height="2dp"
+                android:layout_gravity="center"
+
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:background="#1C1C3E" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/diamond"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="15dp"
+                    android:layout_weight="1"
+                    android:layout_marginTop="20dp"
+                    android:drawableLeft="@drawable/ic_baseline_star_24"
+                    android:drawablePadding="10dp"
+                    android:drawableTint="#9DD9E1"
+                    android:gravity="left"
+                    android:padding="12dp"
+                    android:text="Diamond"
+                    android:textColor="#9DD9E1"
+                    android:textSize="15dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:padding="10dp"
+                    android:background="@drawable/buttonback"
+                    android:id="@+id/diamondbuy"
+                    android:text="₹ 3,999"
+                    android:textColor="#FFFFFF"
+                    android:textSize="18dp">
+
+                </TextView>
+            </LinearLayout>
+
+            <View
+                android:layout_width="100dp"
+                android:layout_height="2dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:background="#1C1C3E" />
+            <!--    <TextView
+                    android:id="@+id/settings"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:layout_margin="15dp"
+                    android:drawableLeft="@drawable/ic_outline_settings_24"
+                    android:drawablePadding="10dp"
+                    android:gravity="left"
+                    android:padding="12dp"
+                    android:text="Settings"
+                    android:textColor="@color/black"
+                    android:textSize="15dp">
+
+                </TextView> -->
+            <TextView
+                android:id="@+id/hint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:text="Choose one to read more, T&amp;C Apply for every subscription plan. Thank you for choosing Reparo.">
+
+            </TextView>
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="Call us at +91 8622020209 for feedback or any Help!"
+                android:textColor="@color/black"
+                android:textSize="15dp">
+
+            </TextView>
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

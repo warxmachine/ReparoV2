@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_height="match_parent">
+    <TextView
+        android:text="Important Update Available!"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:textColor="#FA060D4C"
+        android:textSize="15dp"
+        android:layout_margin="20dp"
+        android:layout_width="wrap_content">
+
+    </TextView>
+    <TextView
+        android:text="Kindly update berfore Proceeding further!!"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:textSize="13dp"
+        android:textColor="@color/black"
+        android:layout_width="wrap_content">
+    </TextView>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_margin="10dp"
+        android:layout_height="38dp"
+        android:background="@drawable/buttonback"
+        android:text="Update"
+        android:textAllCaps="false"
+        app:backgroundTint="@null">
+
+    </Button>
+</LinearLayout>

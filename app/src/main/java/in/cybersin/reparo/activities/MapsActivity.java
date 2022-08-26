@@ -80,14 +80,17 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import in.cybersin.reparo.BuildConfig;
 import in.cybersin.reparo.R;
 import in.cybersin.reparo.model.Customer;
+import in.cybersin.reparo.model.Reqeust;
 
 import static androidx.constraintlayout.widget.Constraints.TAG;
 
@@ -97,6 +100,8 @@ public class MapsActivity extends AppCompatActivity
     GoogleMap mGoogleMap;
     MapRipple mapRipple;
     SupportMapFragment mapFrag;
+    ArrayList<Reqeust> list;
+
     LocationRequest mLocationRequest;
     LinearLayout rl;
     Location mLastLocation;
@@ -104,77 +109,24 @@ public class MapsActivity extends AppCompatActivity
     DatabaseReference reference;
     EditText Proble, device, company;
     String type;
+    EditText PhoneNumber;
     CircleImageView profile;
     ImageView next;
+    int addr;
     Button submit;
     ImageView Ham;
     Marker mCurrLocationMarker;
     FusedLocationProviderClient mFusedLocationClient;
     CircleImageView computer, airconditioner, mobile;
     FirebaseAuth mAuth;
-    private AppUpdateManager mAppupdateManager;
-    private static final int RC_APP_UPDATE =100;
+    int versionCode = BuildConfig.VERSION_CODE;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
-        if (Build.VERSION.SDK_INT >= 21) {
-            getWindow().getDecorView()
-                    .setSystemUiVisibility(
-                            View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-        }
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        getWindow().setStatusBarColor(Color.TRANSPARENT);
-        changeStatusBarColor();
-        profile = findViewById(R.id.profile);
-        if (!(FirebaseAuth.getInstance().getCurrentUser() == null)) {
-            FirebaseDatabase.getInstance().getReference("CustomerInformation").child(FirebaseAuth.getInstance().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    Customer customer = snapshot.getValue(Customer.class);
-                    if (customer != null) {
-                        if (customer.getAvatarName()!=null ) {
-                            Picasso.get().load(customer.getAvatarName()).into(profile);
-                        } else {
-                            Picasso.get().load(R.drawable.person_image);
-                        }
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
-                }
-            });
-        } else {
-            Picasso.get().load(R.drawable.person_image);
-        }
-
-        checkFirstRun();
-        mAppupdateManager = AppUpdateManagerFactory.create(this);
-        mAppupdateManager.getAppUpdateInfo().addOnSuccessListener(new OnSuccessListener<AppUpdateInfo>() {
-            @Override
-            public void onSuccess(AppUpdateInfo result) {
-                if(result.updatePriority() == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS && result.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)){
-                    try {
-                        mAppupdateManager.startUpdateFlowForResult(result,AppUpdateType.IMMEDIATE,MapsActivity.this, RC_APP_UPDATE);
-                    } catch (IntentSender.SendIntentException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-            }
-        });
-        // mAppupdateManager.registerListener(installStateUpdatedListener);
-        profile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MapsActivity.this, ProfileActivity.class));
-
-            }
-        });
         type = "";
         mAuth = FirebaseAuth.getInstance();
         airconditioner = findViewById(R.id.electic);
@@ -190,6 +142,8 @@ public class MapsActivity extends AppCompatActivity
         container.setVisibility(View.GONE);
         mobile = findViewById(R.id.smartphone);
         submit = findViewById(R.id.submit);
+        PhoneNumber = findViewById(R.id.phonenumber);
+
         LinearLayout linearLayout = findViewById(R.id.click);
         linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -197,7 +151,8 @@ public class MapsActivity extends AppCompatActivity
 
             }
         });
-        if(FirebaseAuth.getInstance().getCurrentUser() == null){
+
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
             mAuth.signInAnonymously()
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                         @Override
@@ -216,11 +171,71 @@ public class MapsActivity extends AppCompatActivity
                     });
         }
 
+        checkVersion();
+        checkFirstRun();
 
+        if (Build.VERSION.SDK_INT >= 21) {
+            getWindow().getDecorView()
+                    .setSystemUiVisibility(
+                            View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+        }
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        getWindow().setStatusBarColor(Color.TRANSPARENT);
+        changeStatusBarColor();
+
+        profile = findViewById(R.id.profile);
+
+        if (!(FirebaseAuth.getInstance().getCurrentUser() == null)) {
+            FirebaseDatabase.getInstance().getReference("CustomerInformation").child(FirebaseAuth.getInstance().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    Customer customer = snapshot.getValue(Customer.class);
+                    if (customer != null) {
+                        if (customer.getAvatarName() != null) {
+                            Picasso.get().load(customer.getAvatarName()).into(profile);
+                        } else {
+                            Picasso.get().load(R.drawable.person_image);
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        } else {
+            Picasso.get().load(R.drawable.person_image);
+        }
+
+
+        profile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MapsActivity.this, ProfileActivity.class));
+
+            }
+        });
+
+        FirebaseDatabase.getInstance().getReference("Requests").child(FirebaseAuth.getInstance().getUid())
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        for (DataSnapshot ds : snapshot.getChildren()) {
+                            list.add(ds.getValue(Reqeust.class));
+                        }
+                        addr = list.size() + 1;
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
         Ham.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(),ExtraActivity.class));
+                startActivity(new Intent(getApplicationContext(), ExtraActivity.class));
             }
         });
         computer.setOnClickListener(new View.OnClickListener() {
@@ -338,64 +353,91 @@ public class MapsActivity extends AppCompatActivity
                 }
             }
         });
+
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 switch (type) {
 
                     case "computer": {
-                        reference = FirebaseDatabase.getInstance().getReference("Requests").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid()));
-                        FirebaseDatabase.getInstance().getReference("Requests").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid()))
-                                .addListenerForSingleValueEvent(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                        reference = FirebaseDatabase.getInstance().getReference("Requests").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid()));
-                                        FirebaseDatabase.getInstance().getReference("Requests").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid()))
-                                                .addListenerForSingleValueEvent(new ValueEventListener() {
-                                                    @Override
-                                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                        reference.child("problem").setValue(Proble.getText().toString());
-                                                        reference.child("type").setValue("Computer");
-                                                        FirebaseDatabase.getInstance().getReference("CustomerInformation").child(FirebaseAuth.getInstance().getUid())
-                                                                .addListenerForSingleValueEvent(new ValueEventListener() {
-                                                                    @Override
-                                                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                                        Customer customer = snapshot.getValue(Customer.class);
+                        if (!TextUtils.isEmpty(Proble.getText().toString())) {
+                            reference = FirebaseDatabase.getInstance().getReference("Requests").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid()));
+                            FirebaseDatabase.getInstance().getReference("Requests").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid()))
+                                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                            reference = FirebaseDatabase.getInstance().getReference("Requests").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid()));
+                                            FirebaseDatabase.getInstance().getReference("Requests").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid()))
+                                                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                                                        @Override
+                                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                            reference.child("problem").setValue(Proble.getText().toString());
+                                                            reference.child("type").setValue("Computer");
+                                                            FirebaseDatabase.getInstance().getReference("CustomerInformation").child(FirebaseAuth.getInstance().getUid())
+                                                                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                                                                        @Override
+                                                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                                            Customer customer = snapshot.getValue(Customer.class);
+                                                                            if (snapshot.hasChild("phone")) {
+                                                                                reference.child("phone").setValue(customer.getPhone());
+                                                                                String currentDate = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
+                                                                                String currentTime = new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
+                                                                                reference.child("time").setValue(currentDate + ", " + currentTime);
+                                                                                reference.child("location").setValue(mLastLocation.getLatitude() + ", " + mLastLocation.getLongitude());
+                                                                                email(type, customer.getPhone(), mLastLocation.getLatitude() + ", " + mLastLocation.getLongitude(), Proble.getText().toString());
+                                                                                Toast.makeText(getApplicationContext(), "Your request has been received We'll contact you soon!", Toast.LENGTH_LONG).show();
 
-                                                                        reference.child("phone").setValue(customer.getPhone());
-                                                                        String currentDate = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
-                                                                        String currentTime = new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
-                                                                        reference.child("time").setValue(currentDate+", "+currentTime);
-                                                                        reference.child("location").setValue(mLastLocation.getLatitude()+", "+mLastLocation.getLongitude());
-                                                                        email(type,customer.getPhone(),mLastLocation.getLatitude()+", "+mLastLocation.getLongitude(),Proble.getText().toString());
-                                                                        Toast.makeText(getApplicationContext(),"Your request has been received We'll contact you soon!", Toast.LENGTH_LONG).show();
-                                                                    }
+                                                                            } else {
+                                                                                showdialog();
 
-                                                                    @Override
-                                                                    public void onCancelled(@NonNull DatabaseError error) {
+                                                                            }
 
-                                                                    }
-                                                                });
+                                                                        }
+
+                                                                        @Override
+                                                                        public void onCancelled(@NonNull DatabaseError error) {
+
+                                                                        }
+                                                                    });
 
 
-                                                    }
+                                                        }
 
-                                                    @Override
-                                                    public void onCancelled(@NonNull DatabaseError error) {
+                                                        @Override
+                                                        public void onCancelled(@NonNull DatabaseError error) {
 
-                                                    }
-                                                });
-                                    }
+                                                        }
+                                                    });
+                                        }
 
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError error) {
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) {
 
-                                    }
-                                });
+                                        }
+                                    });
+
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Please Enter Your Problem", Toast.LENGTH_SHORT).show();
+                        }
                         break;
 
                     }
                     case "phone": {
+                        if (TextUtils.isEmpty(Proble.getText().toString())) {
+                            Toast.makeText(getApplicationContext(), "Please Enter Your Problem", Toast.LENGTH_SHORT).show();
+                            return;
+
+                        }
+                        if (TextUtils.isEmpty(company.getText().toString())) {
+                            Toast.makeText(getApplicationContext(), "Please Enter Company Name", Toast.LENGTH_SHORT).show();
+                            return;
+
+                        }
+                        if (TextUtils.isEmpty(device.getText().toString())) {
+                            Toast.makeText(getApplicationContext(), "Please Enter Device Name!", Toast.LENGTH_SHORT).show();
+                            return;
+
+                        }
                         reference = FirebaseDatabase.getInstance().getReference("Requests").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid()));
                         FirebaseDatabase.getInstance().getReference("Requests").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid()))
                                 .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -415,13 +457,16 @@ public class MapsActivity extends AppCompatActivity
                                                                     @Override
                                                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                                                                         Customer customer = snapshot.getValue(Customer.class);
+
                                                                         reference.child("phone").setValue(customer.getPhone());
                                                                         String currentDate = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
                                                                         String currentTime = new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
-                                                                        reference.child("time").setValue(currentDate+", "+currentTime);
-                                                                        reference.child("location").setValue(mLastLocation.getLatitude()+", "+mLastLocation.getLongitude());
-                                                                        email(type,customer.getPhone(),mLastLocation.getLatitude()+", "+mLastLocation.getLongitude(),Proble.getText().toString()+device.getText().toString()+company.getText().toString());
-                                                                        Toast.makeText(getApplicationContext(),"Your request has been received We'll contact you soon!", Toast.LENGTH_LONG).show();
+                                                                        reference.child("time").setValue(currentDate + ", " + currentTime);
+                                                                        reference.child("location").setValue(mLastLocation.getLatitude() + ", " + mLastLocation.getLongitude());
+                                                                        email(type, customer.getPhone(), mLastLocation.getLatitude() + ", " + mLastLocation.getLongitude(), Proble.getText().toString() + device.getText().toString() + company.getText().toString());
+                                                                        Toast.makeText(getApplicationContext(), "Your request has been received We'll contact you soon!", Toast.LENGTH_LONG).show();
+
+
                                                                     }
 
                                                                     @Override
@@ -465,10 +510,12 @@ public class MapsActivity extends AppCompatActivity
                                                         reference.child("phone").setValue(customer.getPhone());
                                                         String currentDate = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
                                                         String currentTime = new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
-                                                        reference.child("time").setValue(currentDate+", "+currentTime);
-                                                        reference.child("location").setValue(mLastLocation.getLatitude()+", "+mLastLocation.getLongitude());
-                                                        email(type,customer.getPhone(),mLastLocation.getLatitude()+", "+mLastLocation.getLongitude(),Proble.getText().toString());
-                                                        Toast.makeText(getApplicationContext(),"Your request has been received We'll contact you soon!", Toast.LENGTH_LONG).show();
+                                                        reference.child("time").setValue(currentDate + ", " + currentTime);
+                                                        reference.child("location").setValue(mLastLocation.getLatitude() + ", " + mLastLocation.getLongitude());
+                                                        email(type, customer.getPhone(), mLastLocation.getLatitude() + ", " + mLastLocation.getLongitude(), Proble.getText().toString());
+                                                        Toast.makeText(getApplicationContext(), "Your request has been received We'll contact you soon!", Toast.LENGTH_LONG).show();
+
+
                                                     }
 
                                                     @Override
@@ -499,32 +546,52 @@ public class MapsActivity extends AppCompatActivity
         mapFrag.getMapAsync(this);
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if(resultCode ==RC_APP_UPDATE && resultCode!=RESULT_OK){
-            Toast.makeText(this,"Cancel",Toast.LENGTH_SHORT).show();
-        }
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-    private InstallStateUpdatedListener installStateUpdatedListener = new InstallStateUpdatedListener() {
-        @Override
-        public void onStateUpdate(@NonNull InstallState state) {
-            if(state.installStatus() == InstallStatus.DOWNLOADED){
-                showCompletedUpdated();
-            }
-        }
+    private void checkVersion() {
+        FirebaseDatabase.getInstance().getReference("version").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                int ver = snapshot.getValue(Integer.class);
 
-        private void showCompletedUpdated() {
-            Snackbar snackbar=Snackbar.make(findViewById(android.R.id.content),"New app is Ready!", Snackbar.LENGTH_INDEFINITE);
-            snackbar.setAction("Install", new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mAppupdateManager.completeUpdate();
+                if(ver !=versionCode){
+                    showUpdateDialog();
                 }
-            });
-            snackbar.show();
-        }
-    };
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull  DatabaseError error) {
+
+            }
+        });
+    }
+
+    private void showUpdateDialog() {
+        Log.e("UPDAT","AWRT");
+    }
+
+    private void showdialog() {
+        LayoutInflater factory = LayoutInflater.from(this);
+        final View deleteDialogView = factory.inflate(R.layout.firstalert, null);
+        EditText phone = deleteDialogView.findViewById(R.id.phone);
+        android.app.AlertDialog.Builder dialog = new android.app.AlertDialog.Builder(MapsActivity.this); // Context, this, etc.
+        dialog.setView(deleteDialogView);
+        dialog.setCancelable(false);
+        dialog.setPositiveButton("CONFIRM", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("CustomerInformation").child(FirebaseAuth.getInstance().getUid());
+                if (TextUtils.isEmpty(phone.getText().toString())) {
+                    Toast.makeText(getApplicationContext(), "Enter Phone Number", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                databaseReference.child("phone").setValue(phone.getText().toString());
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+
+    }
+
 
     @Override
     protected void onStop() {
@@ -537,7 +604,7 @@ public class MapsActivity extends AppCompatActivity
     private void email(String type, String phone, String location, String problem) {
         GMailSender.withAccount("reparo.noreply@gmail.com", "zqbmbzrthgepmywz")
                 .withTitle("Request Received")
-                .withBody("Request Received "+"Type - "+type+"\n "+"Phone - " +phone+"\n Location - "+location)
+                .withBody("Request Received " + "Type - " + type + "\n " + "Phone - " + phone + "\n Location - " + location)
                 .withSender(getString(R.string.app_name))
                 .toEmailAddress("shubhsingh20998@gmail.com,cybersinindustries@gmail.com,warxmachine3@gmail.com") // one or multiple addresses separated by a comma
                 .withListenner(new GmailListener() {
@@ -565,23 +632,6 @@ public class MapsActivity extends AppCompatActivity
     }
 
     @Override
-    protected void onResume() {
-        mAppupdateManager.getAppUpdateInfo().addOnSuccessListener(new OnSuccessListener<AppUpdateInfo>() {
-            @Override
-            public void onSuccess(AppUpdateInfo result) {
-                if(result.updatePriority() == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS){
-                    try {
-                        mAppupdateManager.startUpdateFlowForResult(result,AppUpdateType.IMMEDIATE,MapsActivity.this, RC_APP_UPDATE);
-                    } catch (IntentSender.SendIntentException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
-        super.onResume();
-    }
-
-    @Override
     public void onMapReady(GoogleMap googleMap) {
         try {
             boolean isSuccess = googleMap.setMapStyle(
@@ -591,7 +641,7 @@ public class MapsActivity extends AppCompatActivity
             if (!isSuccess)
                 Log.e("ERROR", "Map style not found!!!");
         } catch (Resources.NotFoundException ex) {
-         }
+        }
         mGoogleMap = googleMap;
         mGoogleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
@@ -655,10 +705,30 @@ public class MapsActivity extends AppCompatActivity
                             mapRipple.startRippleMapAnimation();
                         }
                         switch (type) {
-                            case "mobile":
+                            case "phone":
                                 device.setFocusable(true);
                                 device.setFocusableInTouchMode(true);
                                 device.requestFocus();
+                                FirebaseDatabase.getInstance().getReference("CustomerInformation")
+                                        .child(FirebaseAuth.getInstance().getUid())
+                                        .addValueEventListener(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                Customer customer = snapshot.getValue(Customer.class);
+                                                if(snapshot.exists()){
+                                                    PhoneNumber.setText(customer.getPhone());
+                                                }
+                                                else
+                                                {
+                                                    showdialog();
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError error) {
+
+                                            }
+                                        });
                                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                                 imm.showSoftInput(device, InputMethodManager.SHOW_IMPLICIT);
                                 device.setVisibility(View.VISIBLE);
@@ -669,6 +739,26 @@ public class MapsActivity extends AppCompatActivity
                                 Proble.setFocusable(true);
                                 Proble.setFocusableInTouchMode(true);
                                 device.requestFocus();
+                                FirebaseDatabase.getInstance().getReference("CustomerInformation")
+                                        .child(FirebaseAuth.getInstance().getUid())
+                                        .addValueEventListener(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                Customer customer = snapshot.getValue(Customer.class);
+                                                if(snapshot.exists()){
+                                                    PhoneNumber.setText(customer.getPhone());
+                                                }
+                                                else
+                                                {
+                                                    showdialog();
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError error) {
+
+                                            }
+                                        });
                                 InputMethodManager imm3 = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                                 imm3.showSoftInput(Proble, InputMethodManager.SHOW_IMPLICIT);
                                 company.setVisibility(View.GONE);
@@ -677,6 +767,26 @@ public class MapsActivity extends AppCompatActivity
                                 device.setVisibility(View.GONE);
                                 device.setFocusable(true);
                                 device.setFocusableInTouchMode(true);
+                                FirebaseDatabase.getInstance().getReference("CustomerInformation")
+                                        .child(FirebaseAuth.getInstance().getUid())
+                                        .addValueEventListener(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                Customer customer = snapshot.getValue(Customer.class);
+                                                if(snapshot.exists()){
+                                                    PhoneNumber.setText(customer.getPhone());
+                                                }
+                                                else
+                                                {
+                                                    showdialog();
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError error) {
+
+                                            }
+                                        });
                                 device.requestFocus();
                                 InputMethodManager imm2 = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                                 imm2.showSoftInput(device, InputMethodManager.SHOW_IMPLICIT);
@@ -815,7 +925,6 @@ public class MapsActivity extends AppCompatActivity
     }
   /* private void loadAllAvailableEngineer(final LatLng location) {
         {
-
             DatabaseReference engineersLocation = null;
             if(ispc) {
                 engineersLocation= FirebaseDatabase.getInstance().getReference("EngineersInformation").child("Computer");
@@ -890,11 +999,11 @@ public class MapsActivity extends AppCompatActivity
     public void checkFirstRun() {
         EditText phone;
         boolean isFirstRun = getSharedPreferences("PREFERENCE", MODE_PRIVATE).getBoolean("isFirstRun", true);
-        if (isFirstRun){
+        if (isFirstRun) {
             // Place your dialog code here to display the dialog
             LayoutInflater factory = LayoutInflater.from(this);
             final View deleteDialogView = factory.inflate(R.layout.firstalert, null);
-            phone= deleteDialogView.findViewById(R.id.phone);
+            phone = deleteDialogView.findViewById(R.id.phone);
             android.app.AlertDialog.Builder dialog = new android.app.AlertDialog.Builder(MapsActivity.this); // Context, this, etc.
             dialog.setView(deleteDialogView);
             dialog.setCancelable(false);
@@ -902,8 +1011,8 @@ public class MapsActivity extends AppCompatActivity
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("CustomerInformation").child(FirebaseAuth.getInstance().getUid());
-                    if(TextUtils.isEmpty(phone.getText().toString())){
-                        Toast.makeText(getApplicationContext(), "Enter Phone Number",Toast.LENGTH_LONG).show();
+                    if (TextUtils.isEmpty(phone.getText().toString())) {
+                        Toast.makeText(getApplicationContext(), "Enter Phone Number", Toast.LENGTH_LONG).show();
 
                         getSharedPreferences("PREFERENCE", MODE_PRIVATE)
                                 .edit()
@@ -923,4 +1032,6 @@ public class MapsActivity extends AppCompatActivity
                     .apply();
         }
     }
+
+
 }

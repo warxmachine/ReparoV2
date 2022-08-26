@@ -49,10 +49,10 @@
         <de.hdodenhof.circleimageview.CircleImageView
             android:layout_width="200dp"
             android:layout_height="200dp"
-            app:civ_border_color="@color/purple_200"
+            app:civ_border_color="#005FD4"
             app:civ_border_width="5dp"
             android:layout_marginBottom="60dp"
-            android:src="@drawable/logo">
+            android:src="@drawable/ligo">
 
         </de.hdodenhof.circleimageview.CircleImageView>
 

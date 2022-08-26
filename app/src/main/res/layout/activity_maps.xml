@@ -53,7 +53,6 @@
             android:src="@drawable/person_image"
             app:civ_border_color="@color/black"
             app:civ_border_width="2dp">
-
         </de.hdodenhof.circleimageview.CircleImageView>
 
     </FrameLayout>
@@ -96,7 +95,6 @@
                         android:src="@drawable/pc"
                         app:civ_border_color="@color/white"
                         app:civ_border_width="2dp">
-
                     </de.hdodenhof.circleimageview.CircleImageView>
 
                     <TextView
@@ -127,7 +125,6 @@
                         android:src="@drawable/smartphone"
                         app:civ_border_color="@color/white"
                         app:civ_border_width="2dp">
-
                     </de.hdodenhof.circleimageview.CircleImageView>
 
                     <TextView
@@ -138,14 +135,12 @@
                         android:text="Smartphones"
                         android:textColor="@color/white"
                         android:textSize="12dp">
-
                     </TextView>
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-
                     android:orientation="vertical">
 
                     <de.hdodenhof.circleimageview.CircleImageView
@@ -159,7 +154,6 @@
                         android:src="@drawable/electrician"
                         app:civ_border_color="@color/white"
                         app:civ_border_width="2dp">
-
                     </de.hdodenhof.circleimageview.CircleImageView>
 
                     <TextView
@@ -170,7 +164,6 @@
                         android:text="AirConditioner"
                         android:textColor="@color/white"
                         android:textSize="12dp">
-
                     </TextView>
                 </LinearLayout>
 
@@ -182,7 +175,6 @@
                     android:foregroundGravity="center"
                     android:id="@+id/next"
                     android:src="@drawable/ic_baseline_keyboard_arrow_right_24">
-
                 </ImageView>
 
             </LinearLayout>
@@ -206,6 +198,23 @@
                     android:textSize="20dp">
 
                 </TextView>
+                <EditText
+                    android:hint="Phone"
+                    android:id="@+id/phonenumber"
+                    android:background="@drawable/edittext"
+                    android:backgroundTint="@color/white"
+                    android:padding="10dp"
+                    android:textColorHint="#587AAC"
+                    android:textSize="14sp"
+                    android:layout_width="match_parent"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:drawablePadding="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:fontFamily="@font/mainfont"
+                    android:inputType="number"
+                    android:layout_height="wrap_content">
+                </EditText>
                 <EditText
                     android:id="@+id/device"
                     android:layout_width="match_parent"

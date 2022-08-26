@@ -3,6 +3,10 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/ReparoFinal/app/src/main/res/layout/activity_buying.xml" value="0.25" />
+        <entry key="..\:/ReparoFinal/app/src/main/res/layout/activity_profile.xml" value="0.25" />
+        <entry key="..\:/ReparoFinal/app/src/main/res/layout/activity_request.xml" value="0.33" />
+        <entry key="..\:/ReparoFinal/app/src/main/res/layout/layout_request_adapter.xml" value="0.88375" />
         <entry key="app/src/main/res/layout/activity_maps.xml" value="0.2484375" />
       </map>
     </option>

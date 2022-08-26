@@ -5,7 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/white"
     tools:context=".activities.RequestActivity">
+
     <Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
@@ -23,8 +25,16 @@
             android:text="Requests"
             android:textColor="#193661"
             android:textSize="20dp">
-
         </TextView>
 
     </Toolbar>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv"
+        android:layout_width="match_parent"
+        android:layout_height="664dp"
+        android:layout_marginTop="10dp">
+
+    </androidx.recyclerview.widget.RecyclerView>
+    >
 </LinearLayout>

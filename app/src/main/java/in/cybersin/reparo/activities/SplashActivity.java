@@ -12,10 +12,13 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
+
+import in.cybersin.reparo.BuildConfig;
 import in.cybersin.reparo.R;
 
 public class SplashActivity extends AppCompatActivity {
     TextView textView;
+
 
     private final int SPLASH_DISPLAY_LENGTH = 7000;
     @Override
@@ -55,4 +58,5 @@ public class SplashActivity extends AppCompatActivity {
             window.setStatusBarColor(Color.TRANSPARENT);
         }
     }
+
 }

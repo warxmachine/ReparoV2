@@ -18,12 +18,14 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.reactivestreams.Subscription;
+
 import in.cybersin.reparo.R;
 import in.cybersin.reparo.model.Customer;
 
 public class ExtraActivity extends AppCompatActivity {
     Toolbar toolbar;
-    TextView Settings, Offers, Requests, Account, Name;
+    TextView Settings, Offers, Requests, Account, Name,Subscription;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,9 +47,10 @@ public class ExtraActivity extends AppCompatActivity {
         Name = findViewById(R.id.name);
      //   Settings = findViewById(R.id.settings);
         Offers = findViewById(R.id.offers);
-       // Requests = findViewById(R.id.request);
+        Requests = findViewById(R.id.request);
         Account = findViewById(R.id.account);
 
+        Subscription = findViewById(R.id.subscription);
             FirebaseDatabase.getInstance().getReference("CustomerInformation").child(FirebaseAuth.getInstance().getUid())
                     .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
@@ -83,16 +86,22 @@ public class ExtraActivity extends AppCompatActivity {
                 startActivity(new Intent(ExtraActivity.this,OffersActivity.class));
             }
         });
-       /* Requests.setOnClickListener(new View.OnClickListener() {
+        Requests.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(ExtraActivity.this,RequestActivity.class));
             }
-        });*/
+        });
         Account.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(ExtraActivity.this,ProfileActivity.class));
+            }
+        });
+        Subscription.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ExtraActivity.this,SubscriptionActivity.class));
             }
         });
     }

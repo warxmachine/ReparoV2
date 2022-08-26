@@ -13,6 +13,7 @@ import android.widget.Toolbar;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.gmail.samehadar.iosdialog.IOSDialog;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -32,6 +33,7 @@ public class ProfileActivity extends AppCompatActivity {
     Button signout,Signin;
     TextView Phone;
     CircleImageView ImageView;
+    IOSDialog dialog0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +53,13 @@ public class ProfileActivity extends AppCompatActivity {
             }
 
         });
+
+        dialog0 = new IOSDialog.Builder(ProfileActivity.this)
+                .build();
+        dialog0.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        dialog0.show();
+
+
         Name = findViewById(R.id.name);
         Email = findViewById(R.id.email);
         Phone = findViewById(R.id.phone);
@@ -84,6 +93,8 @@ public class ProfileActivity extends AppCompatActivity {
                                     Email.setText(customer.getEmail());
                                     Phone.setText(customer.getPhone());
                                     Signin.setVisibility(View.GONE);
+                                    dialog0.dismiss();
+
                                     if (!(customer.getAvatarName() == null)) {
                                         Picasso.get().load(customer.getAvatarName()).into(ImageView);
                                     } else {
@@ -96,21 +107,22 @@ public class ProfileActivity extends AppCompatActivity {
                                     Phone.setVisibility(View.GONE);
                                     signout.setVisibility(View.GONE);
                                     Picasso.get().load(R.drawable.person_image);
-                                }
+                                    dialog0.dismiss();
 
+                                }
                             }else{
                                 Name.setText("Hello, Guest");
                                 Email.setVisibility(View.GONE);
                                 Phone.setVisibility(View.GONE);
                                 signout.setVisibility(View.GONE);
                                 Picasso.get().load(R.drawable.person_image);
+                                dialog0.dismiss();
+
                             }
 
                         }
-
                         @Override
                         public void onCancelled(@NonNull DatabaseError error) {
-
                         }
                     });
 

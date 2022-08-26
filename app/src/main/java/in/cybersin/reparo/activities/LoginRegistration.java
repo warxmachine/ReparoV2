@@ -1,3 +1,4 @@
+
 package in.cybersin.reparo.activities;
 
 import android.annotation.SuppressLint;
@@ -71,7 +72,7 @@ public class LoginRegistration extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         Signup.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v) { 
                 setContentView(R.layout.fragment_register);
                 Button create = findViewById(R.id.create);
                 create.setOnClickListener(new View.OnClickListener() {
