@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/white"
+    android:orientation="vertical"
     tools:context=".activities.RequestActivity">
 
     <Toolbar
@@ -24,17 +24,29 @@
             android:layout_height="wrap_content"
             android:text="Requests"
             android:textColor="#193661"
-            android:textSize="20dp">
-        </TextView>
+            android:textSize="20dp"></TextView>
 
     </Toolbar>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:id="@+id/extra"
+        android:layout_margin="10dp"
+        android:gravity="center"
+        android:text="You haven't sent us a request, We are eagerly waiting to serve."
+        android:textColor="@color/black"
+        android:textSize="15dp">
+
+    </TextView>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv"
         android:layout_width="match_parent"
-        android:layout_height="664dp"
-        android:layout_marginTop="10dp">
-
-    </androidx.recyclerview.widget.RecyclerView>
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:descendantFocusability="blocksDescendants"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
     >
 </LinearLayout>

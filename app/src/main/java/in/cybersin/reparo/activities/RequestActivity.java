@@ -7,8 +7,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Toolbar;
 
@@ -19,17 +21,21 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 
 import in.cybersin.reparo.R;
 import in.cybersin.reparo.adapter.RequestAdapter;
-import in.cybersin.reparo.model.Reqeust;
+import in.cybersin.reparo.model.Customer;
+import in.cybersin.reparo.model.Request;
 
 public class RequestActivity extends AppCompatActivity {
     Toolbar toolbar;
-    ArrayList<Reqeust> list;
+    ArrayList<Request> list2;
     RecyclerView recyclerView;
-    DatabaseReference ref;
+    TextView Extra;
+    DatabaseReference ref2;
 
 
     @Override
@@ -50,11 +56,11 @@ public class RequestActivity extends AppCompatActivity {
 
         });
         recyclerView = findViewById(R.id.rv);
-
-        ref = FirebaseDatabase.getInstance().getReference("Requests").child(FirebaseAuth.getInstance().getUid());
-
-        if (ref != null) {
-            ref.addListenerForSingleValueEvent(new ValueEventListener() {
+        Extra = findViewById(R.id.extra);
+        ref2 = FirebaseDatabase.getInstance().getReference().child("Requests").child(FirebaseAuth.getInstance().getUid());
+        ref2.keepSynced(true);
+        if (ref2 != null) {
+            ref2.addValueEventListener(new ValueEventListener() {
                 @NonNull
                 @Override
                 protected Object clone() throws CloneNotSupportedException {
@@ -63,13 +69,21 @@ public class RequestActivity extends AppCompatActivity {
 
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
+
                     if (snapshot.exists()) {
-                        list = new ArrayList<>();
+                        Extra.setVisibility(View.GONE);
+                        list2 = new ArrayList<>();
                         for (DataSnapshot ds : snapshot.getChildren()) {
-                            list.add(ds.getValue(Reqeust.class));
+                            list2.add(ds.getValue(Request.class));
                         }
-                        RequestAdapter adapterClass = new RequestAdapter(list);
-                        recyclerView.setAdapter(adapterClass);
+                        RequestAdapter shopHomeAda = new RequestAdapter(list2);
+                        recyclerView.setAdapter(shopHomeAda);
+                        Log.e("WAR", "WORKING");
+                    }
+                    else
+                    {
+                        Extra.setVisibility(View.VISIBLE);
+
                     }
                 }
 

@@ -26,8 +26,8 @@
             android:value="AIzaSyAs4IbHvL6SXE6RJGNupt9PD8b_lWV9o-Y" />
 
         <activity android:name=".MainActivity" />
-        <activity android:name=".activities.MapsActivity" />
-        <activity android:name=".activities.SplashActivity">
+        <activity android:name=".activities.SplashActivity" />
+        <activity android:name=".activities.MapsActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -4,9 +4,13 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/ReparoFinal/app/src/main/res/layout/activity_buying.xml" value="0.25" />
+        <entry key="..\:/ReparoFinal/app/src/main/res/layout/activity_maps.xml" value="0.17958459979736577" />
         <entry key="..\:/ReparoFinal/app/src/main/res/layout/activity_profile.xml" value="0.25" />
         <entry key="..\:/ReparoFinal/app/src/main/res/layout/activity_request.xml" value="0.33" />
-        <entry key="..\:/ReparoFinal/app/src/main/res/layout/layout_request_adapter.xml" value="0.88375" />
+        <entry key="..\:/ReparoFinal/app/src/main/res/layout/activity_subscription.xml" value="0.17958459979736577" />
+        <entry key="..\:/ReparoFinal/app/src/main/res/layout/layout_request_adapter.xml" value="0.21" />
+        <entry key="..\:/ReparoFinal/app/src/main/res/layout/request_dialog.xml" value="0.36822916666666666" />
+        <entry key="..\:/ReparoFinal/app/src/main/res/layout/update_dialog.xml" value="0.67" />
         <entry key="app/src/main/res/layout/activity_maps.xml" value="0.2484375" />
       </map>
     </option>

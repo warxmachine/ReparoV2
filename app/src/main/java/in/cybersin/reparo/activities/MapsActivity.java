@@ -14,8 +14,10 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Log;
@@ -31,20 +33,27 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.arsy.maps_library.MapRipple;
 import com.github.tntkhang.gmailsenderlibrary.GMailSender;
 import com.github.tntkhang.gmailsenderlibrary.GmailListener;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResult;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -59,15 +68,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.android.play.core.appupdate.AppUpdateInfo;
-import com.google.android.play.core.appupdate.AppUpdateManager;
-import com.google.android.play.core.appupdate.AppUpdateManagerFactory;
-import com.google.android.play.core.install.InstallState;
-import com.google.android.play.core.install.InstallStateUpdatedListener;
-import com.google.android.play.core.install.model.AppUpdateType;
-import com.google.android.play.core.install.model.InstallStatus;
-import com.google.android.play.core.install.model.UpdateAvailability;
-import com.google.android.play.core.tasks.OnSuccessListener;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -90,7 +90,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import in.cybersin.reparo.BuildConfig;
 import in.cybersin.reparo.R;
 import in.cybersin.reparo.model.Customer;
-import in.cybersin.reparo.model.Reqeust;
+import in.cybersin.reparo.model.Request;
 
 import static androidx.constraintlayout.widget.Constraints.TAG;
 
@@ -100,8 +100,6 @@ public class MapsActivity extends AppCompatActivity
     GoogleMap mGoogleMap;
     MapRipple mapRipple;
     SupportMapFragment mapFrag;
-    ArrayList<Reqeust> list;
-
     LocationRequest mLocationRequest;
     LinearLayout rl;
     Location mLastLocation;
@@ -119,11 +117,14 @@ public class MapsActivity extends AppCompatActivity
     FusedLocationProviderClient mFusedLocationClient;
     CircleImageView computer, airconditioner, mobile;
     FirebaseAuth mAuth;
+    ArrayList<Request> list2;
+
     int versionCode = BuildConfig.VERSION_CODE;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
@@ -151,6 +152,24 @@ public class MapsActivity extends AppCompatActivity
 
             }
         });
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            public void run() {
+                if(mCurrLocationMarker==null){
+                    Log.e("ERROR", "onCreate: NOW LOCATION");
+                    Snackbar snackbar = Snackbar
+                            .make(container, "Looks Like You Need To Refresh The Map!", 10000)
+                            .setAction("YES", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    startActivity(new Intent(MapsActivity.this, MapsActivity.class));
+                                }
+                            });
+
+                    snackbar.show();
+                }            }
+        }, 5000);
+
 
         if (FirebaseAuth.getInstance().getCurrentUser() == null) {
             mAuth.signInAnonymously()
@@ -169,6 +188,30 @@ public class MapsActivity extends AppCompatActivity
                             }
                         }
                     });
+        }
+        displayLocationSettingsRequest(getApplicationContext());
+        //checking
+        if(FirebaseAuth.getInstance().getCurrentUser() != null){
+            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Requests").child(FirebaseAuth.getInstance().getUid());
+            if (ref != null) {
+                FirebaseDatabase.getInstance().getReference("Requests").child(FirebaseAuth.getInstance().getUid())
+                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                list2 = new ArrayList<>();
+
+                                for (DataSnapshot ds : snapshot.getChildren()) {
+                                    list2.add(ds.getValue(Request.class));
+                                }
+                                addr = list2.size() + 1;
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+            }
         }
 
         checkVersion();
@@ -217,21 +260,6 @@ public class MapsActivity extends AppCompatActivity
             }
         });
 
-        FirebaseDatabase.getInstance().getReference("Requests").child(FirebaseAuth.getInstance().getUid())
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        for (DataSnapshot ds : snapshot.getChildren()) {
-                            list.add(ds.getValue(Reqeust.class));
-                        }
-                        addr = list.size() + 1;
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
         Ham.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -260,8 +288,13 @@ public class MapsActivity extends AppCompatActivity
                 } else {
                     computer.setBorderColor(Color.WHITE);
                     rl.animate().translationX(0).setDuration(400);
-                    if (mapRipple.isAnimationRunning()) {
-                        mapRipple.stopRippleMapAnimation();
+                    if(mapRipple!=null){
+                        if (mapRipple.isAnimationRunning()) {
+                            if(mapRipple!=null){
+                                mapRipple.stopRippleMapAnimation();
+                            }
+
+                        }
                     }
                     next.animate()
                             .alpha(0.0f)
@@ -298,8 +331,13 @@ public class MapsActivity extends AppCompatActivity
                     computer.setBorderColor(Color.WHITE);
                 } else {
                     rl.animate().translationX(0).setDuration(400);
-                    if (mapRipple.isAnimationRunning()) {
-                        mapRipple.stopRippleMapAnimation();
+                    if(mapRipple!=null){
+                        if (mapRipple.isAnimationRunning()) {
+                            if(mapRipple!=null){
+                                mapRipple.stopRippleMapAnimation();
+                            }
+
+                        }
                     }
                     next.animate()
                             .alpha(0.0f)
@@ -336,8 +374,13 @@ public class MapsActivity extends AppCompatActivity
                     airconditioner.setBorderColor(Color.WHITE);
                 } else {
                     rl.animate().translationX(0).setDuration(400);
-                    if (mapRipple.isAnimationRunning()) {
-                        mapRipple.stopRippleMapAnimation();
+                    if(mapRipple!=null){
+                        if (mapRipple.isAnimationRunning()) {
+                            if(mapRipple!=null){
+                                mapRipple.stopRippleMapAnimation();
+                            }
+
+                        }
                     }
                     next.animate()
                             .alpha(0.0f)
@@ -366,8 +409,8 @@ public class MapsActivity extends AppCompatActivity
                                     .addListenerForSingleValueEvent(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                            reference = FirebaseDatabase.getInstance().getReference("Requests").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid()));
-                                            FirebaseDatabase.getInstance().getReference("Requests").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid()))
+                                            reference = FirebaseDatabase.getInstance().getReference("Requests").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid())).child(String.valueOf(addr));
+                                            FirebaseDatabase.getInstance().getReference("Requests").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid())).child(String.valueOf(addr))
                                                     .addListenerForSingleValueEvent(new ValueEventListener() {
                                                         @Override
                                                         public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -384,6 +427,8 @@ public class MapsActivity extends AppCompatActivity
                                                                                 String currentTime = new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
                                                                                 reference.child("time").setValue(currentDate + ", " + currentTime);
                                                                                 reference.child("location").setValue(mLastLocation.getLatitude() + ", " + mLastLocation.getLongitude());
+                                                                                reference.child("id").setValue(String.valueOf(addr));
+
                                                                                 email(type, customer.getPhone(), mLastLocation.getLatitude() + ", " + mLastLocation.getLongitude(), Proble.getText().toString());
                                                                                 Toast.makeText(getApplicationContext(), "Your request has been received We'll contact you soon!", Toast.LENGTH_LONG).show();
 
@@ -515,7 +560,6 @@ public class MapsActivity extends AppCompatActivity
                                                         email(type, customer.getPhone(), mLastLocation.getLatitude() + ", " + mLastLocation.getLongitude(), Proble.getText().toString());
                                                         Toast.makeText(getApplicationContext(), "Your request has been received We'll contact you soon!", Toast.LENGTH_LONG).show();
 
-
                                                     }
 
                                                     @Override
@@ -584,7 +628,9 @@ public class MapsActivity extends AppCompatActivity
                     Toast.makeText(getApplicationContext(), "Enter Phone Number", Toast.LENGTH_LONG).show();
                     return;
                 }
+
                 databaseReference.child("phone").setValue(phone.getText().toString());
+                startActivity(new Intent(MapsActivity.this,MapsActivity.class));
                 dialog.dismiss();
             }
         });
@@ -895,6 +941,8 @@ public class MapsActivity extends AppCompatActivity
 
                         mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
                         mGoogleMap.setMyLocationEnabled(true);
+                        recreate();
+
                     }
 
                 } else {
@@ -1033,5 +1081,49 @@ public class MapsActivity extends AppCompatActivity
         }
     }
 
+    @Override
+    public int checkPermission(String permission, int pid, int uid) {
+        return super.checkPermission(permission, pid, uid);
+    }
 
+    private void displayLocationSettingsRequest(Context context) {
+        GoogleApiClient googleApiClient = new GoogleApiClient.Builder(context)
+                .addApi(LocationServices.API).build();
+        googleApiClient.connect();
+
+        LocationRequest locationRequest = LocationRequest.create();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setInterval(10000);
+        locationRequest.setFastestInterval(10000 / 2);
+
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(locationRequest);
+        builder.setAlwaysShow(true);
+
+        PendingResult<LocationSettingsResult> result = LocationServices.SettingsApi.checkLocationSettings(googleApiClient, builder.build());
+        result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
+            @Override
+            public void onResult(LocationSettingsResult result) {
+                final Status status = result.getStatus();
+                switch (status.getStatusCode()) {
+                    case LocationSettingsStatusCodes.SUCCESS:
+                        Log.i(TAG, "All location settings are satisfied.");
+                        break;
+                    case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+                        Log.i(TAG, "Location settings are not satisfied. Show the user a dialog to upgrade location settings ");
+
+                        try {
+                            // Show the dialog by calling startResolutionForResult(), and check the result
+                            // in onActivityResult().
+                            status.startResolutionForResult(MapsActivity.this, 999);
+                        } catch (IntentSender.SendIntentException e) {
+                            Log.i(TAG, "PendingIntent unable to execute request.");
+                        }
+                        break;
+                    case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                        Log.i(TAG, "Location settings are inadequate, and cannot be fixed here. Dialog not created.");
+                        break;
+                }
+            }
+        });
+    }
 }

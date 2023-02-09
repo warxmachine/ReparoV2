@@ -1,9 +1,25 @@
 package in.cybersin.reparo.model;
 
-public class Reqeust {
-    String Type, Problem, Time;
+public class Request {
+    String Type;
+    String Problem;
+    String Time;
 
-    public Reqeust(String type, String problem, String time) {
+    public String getId() {
+        return Id;
+    }
+
+    public void setId(String id) {
+        Id = id;
+    }
+
+    public Request(String id) {
+        Id = id;
+    }
+
+    String Id;
+
+    public Request(String type, String problem, String time) {
         Type = type;
         Problem = problem;
         Time = time;
@@ -33,7 +49,7 @@ public class Reqeust {
         Time = time;
     }
 
-    public Reqeust() {
+    public Request() {
     }
 
 

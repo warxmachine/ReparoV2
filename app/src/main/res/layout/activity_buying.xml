@@ -44,7 +44,7 @@
 
         <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
             <ProgressBar
                 android:id="@+id/progressbar"
@@ -161,7 +161,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="end|center"
                 android:layout_marginRight="10dp"
-                android:background="#1D2E40"
+                android:background="@drawable/buttonback"
                 android:text="Buy"
                 app:backgroundTint="@null">
 
