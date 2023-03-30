@@ -488,8 +488,8 @@ public class MapsActivity extends AppCompatActivity
                                 .addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                        reference = FirebaseDatabase.getInstance().getReference("Requests").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid()));
-                                        FirebaseDatabase.getInstance().getReference("Requests").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid()))
+                                        reference = FirebaseDatabase.getInstance().getReference("Requests").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid())).child(String.valueOf(addr));
+                                        FirebaseDatabase.getInstance().getReference("Requests").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid())).child(String.valueOf(addr))
                                                 .addListenerForSingleValueEvent(new ValueEventListener() {
                                                     @Override
                                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -540,8 +540,8 @@ public class MapsActivity extends AppCompatActivity
 
                     }
                     case "airconditioner": {
-                        reference = FirebaseDatabase.getInstance().getReference("Requests").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid()));
-                        FirebaseDatabase.getInstance().getReference("Requests").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid()))
+                        reference = FirebaseDatabase.getInstance().getReference("Requests").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid())).child(String.valueOf(addr));
+                        FirebaseDatabase.getInstance().getReference("Requests").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid())).child(String.valueOf(addr))
                                 .addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -642,7 +642,7 @@ public class MapsActivity extends AppCompatActivity
     @Override
     protected void onStop() {
        /* if(mAppupdateManager!=null){
-            mAppupdateManager.unregisterListener(installStateUpdatedListener);
+            mAppupdateManager.unregisterLis tener(installStateUpdatedListener);
         }*/
         super.onStop();
     }

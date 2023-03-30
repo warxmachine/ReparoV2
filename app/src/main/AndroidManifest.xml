@@ -14,8 +14,9 @@
         android:theme="@style/Theme.Reparo">
         <activity android:name=".activities.BuyingActivity"></activity>
         <activity android:name=".activities.SubscriptionActivity" />
-        <activity android:name=".activities.SettingsActivity" />
-        <activity android:name=".activities.OffersActivity" />
+        <activity android:name=".activities.SettingsActivity" android:exported="true" />
+        <activity android:name=".activities.OffersActivity"
+            android:exported="true"         />
         <activity android:name=".activities.RequestActivity" />
         <activity android:name=".activities.ExtraActivity" />
         <activity android:name=".activities.LoginRegistration" />
@@ -27,7 +28,8 @@
 
         <activity android:name=".MainActivity" />
         <activity android:name=".activities.SplashActivity" />
-        <activity android:name=".activities.MapsActivity">
+        <activity android:name=".activities.MapsActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
