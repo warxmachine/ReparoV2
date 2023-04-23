@@ -8,6 +8,42 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:655160910619:android:d74757bff25374efd7a9be",
+        "android_client_info": {
+          "package_name": "com.example.reparo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "655160910619-a67l9ega12pe87kkthc52pdrp03f038f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDMXo3DTtm35VVnQJrwrZwjs6NGe8RJoLA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "655160910619-a67l9ega12pe87kkthc52pdrp03f038f.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "655160910619-o56ms9id3n5mh31enan16l4ubr35ph72.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.reparo"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:655160910619:android:44b8d8a83ec0a602d7a9be",
         "android_client_info": {
           "package_name": "in.cybersin.reparo"
@@ -30,6 +66,13 @@
             {
               "client_id": "655160910619-a67l9ega12pe87kkthc52pdrp03f038f.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "655160910619-o56ms9id3n5mh31enan16l4ubr35ph72.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.reparo"
+              }
             }
           ]
         }
@@ -67,6 +110,13 @@
             {
               "client_id": "655160910619-a67l9ega12pe87kkthc52pdrp03f038f.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "655160910619-o56ms9id3n5mh31enan16l4ubr35ph72.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.reparo"
+              }
             }
           ]
         }
@@ -112,6 +162,13 @@
             {
               "client_id": "655160910619-a67l9ega12pe87kkthc52pdrp03f038f.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "655160910619-o56ms9id3n5mh31enan16l4ubr35ph72.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.reparo"
+              }
             }
           ]
         }
@@ -157,6 +214,13 @@
             {
               "client_id": "655160910619-a67l9ega12pe87kkthc52pdrp03f038f.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "655160910619-o56ms9id3n5mh31enan16l4ubr35ph72.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.reparo"
+              }
             }
           ]
         }
@@ -194,6 +258,13 @@
             {
               "client_id": "655160910619-a67l9ega12pe87kkthc52pdrp03f038f.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "655160910619-o56ms9id3n5mh31enan16l4ubr35ph72.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.reparo"
+              }
             }
           ]
         }

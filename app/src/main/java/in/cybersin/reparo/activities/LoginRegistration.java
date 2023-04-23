@@ -198,15 +198,13 @@ public class LoginRegistration extends AppCompatActivity {
                             .show();
                     return;
                 }
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
                 FirebaseAuth.getInstance().signInWithEmailAndPassword(Email.getText().toString(), Password.getText().toString())
                         .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                             @Override
                             public void onSuccess(AuthResult authResult) {
-                                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                                if (user != null) {
-                                    user.delete();
-                                }
+
                                 View parentLayout = findViewById(R.id.content);
 
                                 Snackbar.make(parentLayout, "Login SuccessFully, Now you are good to go.", Snackbar.LENGTH_SHORT)
@@ -223,6 +221,7 @@ public class LoginRegistration extends AppCompatActivity {
                         Snackbar.make(getWindow().getDecorView().getRootView(), "Something went wrong !" + e, Snackbar.LENGTH_SHORT)
                                 .show();
                         dialog0.dismiss();
+
                     }
                 });
             }
