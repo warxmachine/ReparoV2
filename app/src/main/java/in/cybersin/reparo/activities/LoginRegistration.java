@@ -198,15 +198,18 @@ public class LoginRegistration extends AppCompatActivity {
                             .show();
                     return;
                 }
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                user.delete();
+
                 FirebaseAuth.getInstance().signInWithEmailAndPassword(Email.getText().toString(), Password.getText().toString())
                         .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                             @Override
                             public void onSuccess(AuthResult authResult) {
+                                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                                if (user != null) {
+                                    user.delete();
+                                }
                                 View parentLayout = findViewById(R.id.content);
 
-                                Snackbar.make(parentLayout, "Registered SuccessFully, Now you are good to go.", Snackbar.LENGTH_SHORT)
+                                Snackbar.make(parentLayout, "Login SuccessFully, Now you are good to go.", Snackbar.LENGTH_SHORT)
                                         .show();
                                 Paper.book().write(Common.userField, Email.getText().toString());
                                 Paper.book().write(Common.passfield, Password.getText().toString());

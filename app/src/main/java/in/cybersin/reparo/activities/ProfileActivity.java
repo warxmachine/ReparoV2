@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
@@ -30,7 +31,7 @@ public class ProfileActivity extends AppCompatActivity {
     Toolbar toolbar;
     TextView Name;
     TextView Email;
-    Button signout,Signin;
+    Button signout, Signin;
     TextView Phone;
     CircleImageView ImageView;
     IOSDialog dialog0;
@@ -69,7 +70,11 @@ public class ProfileActivity extends AppCompatActivity {
         Signin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(ProfileActivity.this,LoginRegistration.class));
+                if (FirebaseAuth.getInstance().getUid() == null){
+                    Toast.makeText(getApplicationContext(),"Error",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                startActivity(new Intent(ProfileActivity.this, LoginRegistration.class));
             }
         });
         signout.setOnClickListener(new View.OnClickListener() {
@@ -81,14 +86,14 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
-
+        if(FirebaseAuth.getInstance().getUid() !=null){
             FirebaseDatabase.getInstance().getReference("CustomerInformation").child(FirebaseAuth.getInstance().getUid())
                     .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             Customer customer = snapshot.getValue(Customer.class);
                             if (customer != null) {
-                                if (customer.getName() != null){
+                                if (customer.getName() != null) {
                                     Name.setText(customer.getName());
                                     Email.setText(customer.getEmail());
                                     Phone.setText(customer.getPhone());
@@ -100,8 +105,7 @@ public class ProfileActivity extends AppCompatActivity {
                                     } else {
                                         Picasso.get().load(R.drawable.person_image);
                                     }
-                                }
-                                else{
+                                } else {
                                     Name.setText("Hello, Guest");
                                     Email.setVisibility(View.GONE);
                                     Phone.setVisibility(View.GONE);
@@ -110,7 +114,7 @@ public class ProfileActivity extends AppCompatActivity {
                                     dialog0.dismiss();
 
                                 }
-                            }else{
+                            } else {
                                 Name.setText("Hello, Guest");
                                 Email.setVisibility(View.GONE);
                                 Phone.setVisibility(View.GONE);
@@ -121,11 +125,14 @@ public class ProfileActivity extends AppCompatActivity {
                             }
 
                         }
+
                         @Override
                         public void onCancelled(@NonNull DatabaseError error) {
                         }
                     });
 
-    }
+        }
+        }
+
 
 }

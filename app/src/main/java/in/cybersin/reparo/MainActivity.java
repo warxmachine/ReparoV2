@@ -23,7 +23,8 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import in.cybersin.reparo.activities.MapsActivity;
 
-public class MainActivity extends AppCompatActivity {
+public class
+MainActivity extends AppCompatActivity {
     ChildEventListener handler;
 
     @Override
