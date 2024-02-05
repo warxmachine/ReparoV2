@@ -68,6 +68,13 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
+
+import com.google.android.play.core.appupdate.AppUpdateInfo;
+import com.google.android.play.core.appupdate.AppUpdateManager;
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory;
+import com.google.android.play.core.appupdate.AppUpdateOptions;
+import com.google.android.play.core.install.model.AppUpdateType;
+import com.google.android.play.core.install.model.UpdateAvailability;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -115,7 +122,7 @@ public class MapsActivity extends AppCompatActivity
     ImageView Ham;
     Marker mCurrLocationMarker;
     FusedLocationProviderClient mFusedLocationClient;
-    CircleImageView computer, airconditioner, mobile;
+    CircleImageView computer, airconditioner, mobile, electric;
     FirebaseAuth mAuth;
     ArrayList<Request> list2;
 
@@ -130,9 +137,10 @@ public class MapsActivity extends AppCompatActivity
 
         type = "";
         mAuth = FirebaseAuth.getInstance();
-        airconditioner = findViewById(R.id.electic);
+        airconditioner = findViewById(R.id.aircondish);
         Ham = findViewById(R.id.ham);
         next = findViewById(R.id.next);
+        electric = findViewById(R.id.electrician);
         rl = findViewById(R.id.click);
         next.setVisibility(View.GONE);
         Proble = findViewById(R.id.problem);
@@ -285,6 +293,8 @@ public class MapsActivity extends AppCompatActivity
 
                     });
                     mobile.setBorderColor(Color.WHITE);
+                    electric.setBorderColor(Color.WHITE);
+
                 } else {
                     computer.setBorderColor(Color.WHITE);
                     rl.animate().translationX(0).setDuration(400);
@@ -329,6 +339,8 @@ public class MapsActivity extends AppCompatActivity
                         }
                     });
                     computer.setBorderColor(Color.WHITE);
+                    electric.setBorderColor(Color.WHITE);
+
                 } else {
                     rl.animate().translationX(0).setDuration(400);
                     if(mapRipple!=null){
@@ -372,6 +384,7 @@ public class MapsActivity extends AppCompatActivity
                     });
                     computer.setBorderColor(Color.WHITE);
                     airconditioner.setBorderColor(Color.WHITE);
+                    electric.setBorderColor(Color.WHITE);
                 } else {
                     rl.animate().translationX(0).setDuration(400);
                     if(mapRipple!=null){
@@ -393,6 +406,50 @@ public class MapsActivity extends AppCompatActivity
                         }
                     });
                     mobile.setBorderColor(Color.WHITE);
+                }
+            }
+        });
+        electric.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (electric.getBorderColor() == Color.WHITE) {
+                    type = "electrician";
+
+                    electric.setBorderColor(Color.GREEN);
+                    rl.animate().translationX(-20).setDuration(400);
+                    next.animate()
+                            .alpha(1.0f)
+                            .setDuration(300).setListener(new AnimatorListenerAdapter() {
+                                @Override
+                                public void onAnimationStart(Animator animation) {
+                                    super.onAnimationStart(animation);
+                                    next.setVisibility(View.VISIBLE);
+                                }
+                            });
+                    computer.setBorderColor(Color.WHITE);
+                    airconditioner.setBorderColor(Color.WHITE);
+                    mobile.setBorderColor(Color.WHITE);
+                } else {
+                    rl.animate().translationX(0).setDuration(400);
+                    if(mapRipple!=null){
+                        if (mapRipple.isAnimationRunning()) {
+                            if(mapRipple!=null){
+                                mapRipple.stopRippleMapAnimation();
+                            }
+
+                        }
+                    }
+                    next.animate()
+                            .alpha(0.0f)
+                            .setDuration(300).setListener(new AnimatorListenerAdapter() {
+                                @Override
+                                public void onAnimationEnd(Animator animation) {
+                                    super.onAnimationEnd(animation);
+                                    next.setVisibility(View.GONE);
+                                    container.setVisibility(View.GONE);
+                                }
+                            });
+                    electric.setBorderColor(Color.WHITE);
                 }
             }
         });
@@ -577,7 +634,45 @@ public class MapsActivity extends AppCompatActivity
                                     }
                                 });
                         break;
+                    }
+                        case "electrician": {
+                            reference = FirebaseDatabase.getInstance().getReference("Requests").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid())).child(String.valueOf(addr));
+                            FirebaseDatabase.getInstance().getReference("Requests").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid())).child(String.valueOf(addr))
+                                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                            reference.child("problem").setValue(Proble.getText().toString());
+                                            reference.child("type").setValue("Electrician");
+                                            FirebaseDatabase.getInstance().getReference("CustomerInformation").child(FirebaseAuth.getInstance().getUid())
+                                                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                                                        @Override
+                                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                            Customer customer = snapshot.getValue(Customer.class);
+                                                            reference.child("phone").setValue(customer.getPhone());
+                                                            String currentDate = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
+                                                            String currentTime = new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
+                                                            reference.child("time").setValue(currentDate + ", " + currentTime);
+                                                            reference.child("location").setValue(mLastLocation.getLatitude() + ", " + mLastLocation.getLongitude());
+                                                            email(type, customer.getPhone(), mLastLocation.getLatitude() + ", " + mLastLocation.getLongitude(), Proble.getText().toString());
+                                                            Toast.makeText(getApplicationContext(), "Your request has been received We'll contact you soon!", Toast.LENGTH_LONG).show();
 
+                                                        }
+
+                                                        @Override
+                                                        public void onCancelled(@NonNull DatabaseError error) {
+
+                                                        }
+                                                    });
+
+
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) {
+
+                                        }
+                                    });
+                            break;
 
                     }
                 }
@@ -595,9 +690,10 @@ public class MapsActivity extends AppCompatActivity
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 int ver = snapshot.getValue(Integer.class);
-
-                if(ver !=versionCode){
+                if(ver < versionCode){
                     showUpdateDialog();
+                    Log.e( "onDataChange: ",String.valueOf(ver));
+
                 }
 
             }
@@ -610,8 +706,12 @@ public class MapsActivity extends AppCompatActivity
     }
 
     private void showUpdateDialog() {
-        Log.e("UPDAT","AWRT");
+
+
     }
+
+
+// Displays the snackbar notification and call to action.
 
     private void showdialog() {
         LayoutInflater factory = LayoutInflater.from(this);
@@ -836,6 +936,35 @@ public class MapsActivity extends AppCompatActivity
                                 device.requestFocus();
                                 InputMethodManager imm2 = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                                 imm2.showSoftInput(device, InputMethodManager.SHOW_IMPLICIT);
+                                company.setVisibility(View.GONE);
+                                break;
+                            case "electrician":
+                                device.setVisibility(View.GONE);
+                                Proble.setFocusable(true);
+                                Proble.setFocusableInTouchMode(true);
+                                device.requestFocus();
+                                FirebaseDatabase.getInstance().getReference("CustomerInformation")
+                                        .child(FirebaseAuth.getInstance().getUid())
+                                        .addValueEventListener(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                Customer customer = snapshot.getValue(Customer.class);
+                                                if(snapshot.exists()){
+                                                    PhoneNumber.setText(customer.getPhone());
+                                                }
+                                                else
+                                                {
+                                                    showdialog();
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError error) {
+
+                                            }
+                                        });
+                                InputMethodManager imm4 = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                                imm4.showSoftInput(Proble, InputMethodManager.SHOW_IMPLICIT);
                                 company.setVisibility(View.GONE);
                                 break;
 

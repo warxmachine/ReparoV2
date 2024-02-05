@@ -2,11 +2,15 @@
 package in.cybersin.reparo.activities;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -46,9 +50,14 @@ public class LoginRegistration extends AppCompatActivity {
     TextView Signup;
     IOSDialog dialog0;
     Toolbar toolbar;
+    ProgressDialog mProgressDialog;
+
     Button signin;
     FirebaseAuth mAuth;
     EditText Email, Password, Phone, Name;
+    TextView signup;
+    TextView Forgot;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,12 +78,28 @@ public class LoginRegistration extends AppCompatActivity {
                 .build();
         dialog0.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         Signup = findViewById(R.id.signup);
+        Forgot = findViewById(R.id.forgotPass);
         mAuth = FirebaseAuth.getInstance();
+        Forgot.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                forgotPass();
+            }
+        });
         Signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) { 
                 setContentView(R.layout.fragment_register);
                 Button create = findViewById(R.id.create);
+                signup = findViewById(R.id.signup);
+                signup.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startActivity(new Intent(LoginRegistration.this,LoginRegistration.class));
+                    }
+                });
+
+
                 create.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -190,12 +215,14 @@ public class LoginRegistration extends AppCompatActivity {
                 if (TextUtils.isEmpty(Email.getText().toString())) {
                     Snackbar.make(getWindow().getDecorView().getRootView(), "Please enter your Email-Address!", Snackbar.LENGTH_SHORT)
                             .show();
+                    dialog0.dismiss();
                     return;
 
                 }
                 if (TextUtils.isEmpty(Password.getText().toString())) {
                     Snackbar.make(getWindow().getDecorView().getRootView(), "Please enter your Password!", Snackbar.LENGTH_SHORT)
                             .show();
+                    dialog0.dismiss();
                     return;
                 }
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -267,5 +294,58 @@ public class LoginRegistration extends AppCompatActivity {
 
 
     }
+    private void forgotPass() {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(LoginRegistration.this);
+        alertDialog.setTitle("Forgot Password");
+        alertDialog.setMessage("Please enter your Email Address");
 
+        LayoutInflater inflater = LayoutInflater.from(getApplication());
+        View forgot_pwd = inflater.inflate(R.layout.forgot_pwd, null);
+
+        final TextView eml = forgot_pwd.findViewById(R.id.eml);
+        alertDialog.setView(forgot_pwd);
+
+        alertDialog.setPositiveButton("RESET", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(final DialogInterface dialog, int which) {
+                mProgressDialog = new ProgressDialog(LoginRegistration.this,R.style.MyAlertDialogStyle);
+                mProgressDialog.setCancelable(false);
+                mProgressDialog.show();
+                mProgressDialog.setContentView(R.layout.progress_bar);
+                mProgressDialog.getWindow().setBackgroundDrawableResource(
+                        android.R.color.transparent
+                );
+
+                FirebaseAuth.getInstance().sendPasswordResetEmail(eml.getText().toString().trim())
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                dialog.dismiss();
+                                mProgressDialog.dismiss();
+
+                                Toast.makeText(getApplication()," Reset password link has been sent" , Toast.LENGTH_LONG)
+                                        .show();
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                dialog.dismiss();
+                                mProgressDialog.dismiss();
+
+                                Toast.makeText(getApplication(),"" + e.getMessage(), Toast.LENGTH_LONG)
+                                        .show();
+                            }
+                        });
+
+            }
+        });
+        alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        alertDialog.show();
+
+    }
 }

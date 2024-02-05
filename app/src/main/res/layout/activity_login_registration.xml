@@ -107,17 +107,6 @@
                     android:textColorHint="#587AAC"
                     android:textSize="14sp" />
 
-                <CheckBox
-                    android:id="@+id/checkbox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="12dp"
-                    android:layout_marginTop="20dp"
-                    android:buttonTint="#587AAC"
-                    android:fontFamily="@font/mainfont"
-                    android:text="Remember me"
-                    android:textColor="#193661" />
-
                 <Button
                     android:id="@+id/signin"
                     android:layout_width="186dp"
@@ -131,6 +120,7 @@
                 </Button>
 
                 <TextView
+                    android:id="@+id/forgotPass"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
